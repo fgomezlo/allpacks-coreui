@@ -1,0 +1,88 @@
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col md="8">
+        <c-card-group>
+          <c-card class="p-4">
+            <form 
+            cForm 
+            [formGroup]="simpleForm" 
+            novalidate 
+            (ngSubmit)="onSubmit()">
+            <c-card-body>
+              <form cForm>
+                <h1>Login</h1>
+                <p class="text-medium-emphasis">Inicia sesión en tu cuenta.</p>
+                <c-input-group class="mb-3">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilUser"></svg>
+                  </span>
+              
+                  <input 
+                  formControlName="email" 
+                  cFormControl 
+                  placeholder="Correo" 
+                  [valid]="
+                email.touched && email.valid ? true
+                : (submitted || email.touched) && email.invalid
+                ? false : undefined"
+                  />
+                  <c-form-feedback *ngIf="submitted || email.invalid" [valid]="!(submitted || email.invalid)">
+                    <ng-container *ngIf="email.errors as errors">
+                      <p *ngIf="errors['required']">Correo no puede estar vacío</p>
+                      <p *ngIf="errors['email']">Introduzca un correo válido</p>
+                    </ng-container>
+                  </c-form-feedback>
+
+                </c-input-group>
+                <c-input-group class="mb-4">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilLockLocked"></svg>
+                  </span>
+                  <input
+                  formControlName="clave"
+                    cFormControl
+                    placeholder="Clave"
+                    type="password"
+                    [valid]="
+                    clave.touched && clave.valid ? true
+                    : (submitted || clave.touched) && clave.invalid
+                    ? false : undefined"
+                  />
+                  <c-form-feedback *ngIf="submitted || clave.invalid" [valid]="!(submitted || clave.invalid)">
+                    <ng-container *ngIf="clave.errors as errors">
+                      <p *ngIf="errors['required']">Clave no puede estar vacío</p>
+
+                    </ng-container>
+                  </c-form-feedback>
+                </c-input-group>
+                <c-row>
+                  <c-col xs="6">
+                    <button 
+                    cButton 
+                    (click)="onSubmit()" 
+                    class="px-4" 
+                    color="primary">
+                      Inicia sesión
+                    </button>
+                  </c-col>
+                  <c-col class="text-right" xs="6">
+                    <button cButton class="px-0" color="link">
+                      Olvidaste clave?
+                    </button>
+                  </c-col>
+                </c-row>
+              </form>
+            </c-card-body>
+            </form>
+          </c-card>
+          <c-card [ngStyle]="{'width.%': 44}">
+            <c-card-body class="text-center">
+              <img class="mt-5" src="/assets/images/logo_allpacks.png">
+            </c-card-body>
+          </c-card>
+        </c-card-group>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>

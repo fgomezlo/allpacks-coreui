@@ -1,0 +1,34 @@
+<c-row>
+  <c-col>
+    <div class="d-grid">
+      <a cButton color="primary" [routerLink]="['/usuario']">
+        <svg cIcon class="me-2" name="cilUser"></svg>
+        Usuarios Administrativos
+      </a>
+    </div>
+  </c-col>
+  <c-col>
+    <div class="d-grid">
+      <a cButton color="success" [routerLink]="['/cliente']">
+        <svg cIcon class="me-2" name="cilPeople"></svg>
+        Clientes
+      </a>
+    </div>
+  </c-col>
+  <c-col>
+    <div class="d-grid">
+      <a cButton color="warning" [routerLink]="['/consolidacion/consultar']">
+        <svg cIcon class="me-2" name="cilInbox"></svg>
+        Consolidaciones
+      </a>
+    </div>
+  </c-col>
+  <c-col>
+    <div class="d-grid" >
+      <a cButton color="danger" [routerLink]="['/consolidacion/reempaque']" >
+        <svg cIcon class="me-2" name="cilShareBoxed"></svg>
+        Buscar Por Tracking
+      </a>
+    </div>
+  </c-col>
+</c-row>
