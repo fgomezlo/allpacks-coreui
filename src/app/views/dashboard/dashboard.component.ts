@@ -1,6 +1,6 @@
-import { DOCUMENT, NgStyle } from '@angular/common';
+import { CommonModule, DOCUMENT, NgStyle } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit, Renderer2, signal, WritableSignal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, NgModel, ReactiveFormsModule } from '@angular/forms';
 
 import {
   AvatarComponent,
@@ -23,6 +23,8 @@ import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { IconDirective } from '@coreui/icons-angular';
 
 import { RouterModule } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import * as _ from 'lodash-es';
 
 interface IUser {
   name: string;
@@ -49,7 +51,7 @@ interface IUser {
     FormCheckLabelDirective, ChartjsComponent, NgStyle, 
     CardFooterComponent, GutterDirective, ProgressBarDirective, 
     ProgressComponent, CardHeaderComponent,
-     TableDirective, AvatarComponent, RouterModule]
+     TableDirective, AvatarComponent, RouterModule, CommonModule]
 })
 export class DashboardComponent implements OnInit {
 
@@ -59,8 +61,19 @@ export class DashboardComponent implements OnInit {
   readonly #chartsData: DashboardChartsData = inject(DashboardChartsData);
 */
 
+  constructor(private authService : AuthService) {}
+
   ngOnInit(): void {
-    
+
   }
+
+  isAvailable(rolesAllow: any) {
+
+    let lstAvailbale = rolesAllow.map((item : String)=>{
+      return !_.isUndefined(_.find(this.authService.currentUser.roles, {name : item} ));
+    });
+
+    return lstAvailbale.indexOf(true) >= 0;
+}
 
 }

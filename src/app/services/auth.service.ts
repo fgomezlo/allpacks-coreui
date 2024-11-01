@@ -13,7 +13,7 @@ export class AuthService {
 
   constructor(private http: HttpClient, private jwtService:JwtService) { }
 
-  auth(email:string, pass:string) {
+  auth(loguser:string, pass:string, recaptcha:string | null) {
 
     /*headers = headers.set();
     headers = headers.set('Access-Control-Allow-Origin', '*');
@@ -27,9 +27,73 @@ export class AuthService {
     };
 
     let body = {
-        "function" : "auth",
+        "function" : "signin",
+        "loguser" : loguser,
+        "password" : pass,
+        "recaptcha" : recaptcha
+    };
+
+    return this.http.post(this.url, 
+      body, 
+      options).toPromise();
+  }
+  
+  recovery(email:string, recaptcha:string | null) {
+
+    /*headers = headers.set();
+    headers = headers.set('Access-Control-Allow-Origin', '*');
+    */
+
+    const options = {
+      headers : new HttpHeaders({
+        'Content-Type' : 'application/json'
+      }),
+      responseType: 'json' as const
+    };
+
+    let body = {
+        "function" : "passrecovery",
         "email" : email,
-        "password" : pass
+        "recaptcha" : recaptcha
+    };
+
+    return this.http.post(this.url, 
+      body, 
+      options).toPromise();
+  }
+
+  checkTokenReset(token: string | null) {
+    const options = {
+      headers : new HttpHeaders({
+        'Content-Type' : 'application/json'
+      }),
+      responseType: 'json' as const
+    };
+
+    let body = {
+        "function" : "checkToken",
+        "token" : token
+    };
+
+    return this.http.post(this.url, 
+      body, 
+      options).toPromise();
+  }
+
+  resetPass(token: string | null, recaptcha: string, clave: string) {
+    
+    const options = {
+      headers : new HttpHeaders({
+        'Content-Type' : 'application/json'
+      }),
+      responseType: 'json' as const
+    };
+
+    let body = {
+      "function" : "resetpass",
+      "token" : token,
+      "pass" : clave,
+      "recaptcha" : recaptcha
     };
 
     return this.http.post(this.url, 

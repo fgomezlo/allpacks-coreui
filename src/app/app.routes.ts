@@ -59,12 +59,12 @@ export const routes: Routes = [
       title: 'Autenticación de Usuario'
     }
   },
-  // {
-  //   path: 'register',
-  //   loadComponent: () => import('./views/pages/register/register.component').then(m => m.RegisterComponent),
-  //   data: {
-  //     title: 'Register Page'
-  //   }
-  // },
+  {
+    path: 'passrecovery/:passtoken',
+    loadComponent: () => import('./views/pages/passrecovery/passrecovery.component').then(m => m.PassrecoveryComponent),
+    data: {
+      title: 'Reestablecer Contraseña'
+    }
+  },
   { path: '**', redirectTo: 'dashboard' }
 ];

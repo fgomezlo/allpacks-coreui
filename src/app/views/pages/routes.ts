@@ -21,12 +21,12 @@ export const routes: Routes = [
     data: {
       title: 'Login Page'
     }
-  }/*,
+  },
   {
-    path: 'register',
-    loadComponent: () => import('./register/register.component').then(m => m.RegisterComponent),
+    path: 'passrecovery',
+    loadComponent: () => import('./passrecovery/passrecovery.component').then(m => m.PassrecoveryComponent),
     data: {
       title: 'Register Page'
     }
-  }*/
+  }
 ];

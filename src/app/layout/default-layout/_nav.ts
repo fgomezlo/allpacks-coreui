@@ -35,16 +35,25 @@ export const navItems: INavData[] = [
   },
   {
     title: true,
-    name: 'Consolidaciones',
+    name: 'Ordenes',
     attributes : {
       "allow" : ["Administrador", "Usuario"],
       "active" : true
     }
   },
   {
-    name: 'Consultar',
+    name: 'Consolidación',
     url: '/consolidacion/consultar',
-    iconComponent: { name: 'cil-inbox' },
+    iconComponent: { name: 'cil-boat-alt' },
+    attributes : {
+      "allow" : ["Administrador", "Usuario"],
+      "active" : true
+    }
+  },
+  {
+    name: 'Reempaque',
+    url: '/consolidacion/consultar',
+    iconComponent: { name: 'cil-airplane-mode' },
     attributes : {
       "allow" : ["Administrador", "Usuario"],
       "active" : true
@@ -54,7 +63,7 @@ export const navItems: INavData[] = [
     name: 'Por Tracking',
     url: '/consolidacion/reempaque',
     /*linkProps: { fragment: 'headings' },*/
-    iconComponent: { name: 'cil-share-boxed' },
+    iconComponent: { name: 'cil-search' },
     attributes : {
       "allow" : ["Administrador", "Usuario"],
       "active" : true

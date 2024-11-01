@@ -1,34 +1,49 @@
-<c-row>
-  <c-col>
-    <div class="d-grid">
-      <a cButton color="primary" [routerLink]="['/usuario']">
+<c-row [xs]="12">
+  <c-col md="4" class="d-grid" *ngIf="isAvailable(['Administrador'])">
+    
+      <a class="m-1" cButton color="primary" [routerLink]="['/usuario']">
         <svg cIcon class="me-2" name="cilUser"></svg>
         Usuarios Administrativos
       </a>
-    </div>
+    
   </c-col>
-  <c-col>
-    <div class="d-grid">
-      <a cButton color="success" [routerLink]="['/cliente']">
+  <c-col md="4" class="d-grid" *ngIf="isAvailable(['Administrador', 'Usuario'])">
+    
+      <a class="m-1" cButton color="success" [routerLink]="['/cliente']">
         <svg cIcon class="me-2" name="cilPeople"></svg>
         Clientes
       </a>
-    </div>
+    
   </c-col>
-  <c-col>
-    <div class="d-grid">
-      <a cButton color="warning" [routerLink]="['/consolidacion/consultar']">
-        <svg cIcon class="me-2" name="cilInbox"></svg>
-        Consolidaciones
+  <c-col md="4" class="d-grid" *ngIf="isAvailable(['Administrador', 'Usuario'])">
+    
+      <a class="m-1" cButton color="warning" [routerLink]="['/consolidacion/consultar']">
+        <svg cIcon class="me-2" name="cilBoatAlt"></svg>
+        Consolidación
       </a>
-    </div>
+    
   </c-col>
-  <c-col>
-    <div class="d-grid" >
-      <a cButton color="danger" [routerLink]="['/consolidacion/reempaque']" >
-        <svg cIcon class="me-2" name="cilShareBoxed"></svg>
+  <c-col md="4" class="d-grid" *ngIf="isAvailable(['Administrador', 'Usuario'])">
+    
+      <a class="m-1" cButton color="warning" [routerLink]="['/consolidacion/consultar']">
+        <svg cIcon class="me-2" name="cilAirplaneMode"></svg>
+        Reempaque
+      </a>
+    
+  </c-col>
+  <c-col md="4" class="d-grid" *ngIf="isAvailable(['Administrador', 'Usuario'])">
+      <a class="m-1" cButton color="danger" [routerLink]="['/consolidacion/reempaque']" >
+        <svg cIcon class="me-2" name="cilSearch"></svg>
         Buscar Por Tracking
       </a>
-    </div>
+  </c-col>
+  <c-col md="4" class="d-grid" *ngIf="isAvailable(['Administrador'])">
+      <a class="m-1"
+      cButton 
+      color="dark" 
+      [routerLink]="['/parametros']" >
+        <svg cIcon class="me-2" name="cilSettings"></svg>
+        Parametros
+      </a>
   </c-col>
 </c-row>
