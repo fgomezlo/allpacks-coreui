@@ -7,6 +7,9 @@ export const environment = {
   services : {
     auth : {
        url : "https://www.allpacksfc.com/allpacks-backend/api/auth.php"
-    }    
+    },    
+    user : {
+       url : "https://www.allpacksfc.com/allpacks-backend/api/users.php"
+    }
   }
 };

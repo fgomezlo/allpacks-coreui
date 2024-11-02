@@ -97,7 +97,9 @@ import {
   cilSend,
   cilBoatAlt,
   cilAirplaneMode,
-  cilSearch
+  cilSearch,
+  cilDelete,
+  cilPlus
 } from '@coreui/icons';
 
 import { signet } from './signet';
@@ -204,7 +206,9 @@ export const iconSubset = {
   cilSend,
   cilBoatAlt,
   cilAirplaneMode,
-  cilSearch
+  cilSearch,
+  cilDelete,
+  cilPlus
 };
 
 export enum IconSubset {
@@ -309,5 +313,7 @@ export enum IconSubset {
   cilBoatAlt = 'cilBoatAlt',
   cilAirplaneMode = 'cilAirplaneMode',
   cilSearch = 'cilSearch',
+  cilDelete = 'cilDelete',
+  cilPlus = 'cilPlus',
 }
 
