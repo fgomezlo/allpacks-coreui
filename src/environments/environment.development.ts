@@ -10,6 +10,9 @@ export const environment = {
     },    
     user : {
        url : "http://localhost/allpacks-backend/api/users.php"
+    },    
+    customer : {
+       url : "http://localhost/allpacks-backend/api/customers.php"
     }    
   }
 };

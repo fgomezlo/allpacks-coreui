@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
-  FormGroupDirective,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -28,7 +26,6 @@ import {
   TabsComponent,
   TabsContentComponent,
   TabsListComponent,
-  TabsModule,
 } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import _ from 'lodash';
@@ -48,8 +45,6 @@ import Swal from 'sweetalert2';
     ReactiveFormsModule,
     CommonModule,
     ImgModule,
-    RecaptchaFormsModule,
-    RecaptchaModule,
     IconModule,
     ButtonModule,
     RouterLink,

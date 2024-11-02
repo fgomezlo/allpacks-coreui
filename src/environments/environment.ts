@@ -10,6 +10,9 @@ export const environment = {
     },    
     user : {
        url : "https://www.allpacksfc.com/allpacks-backend/api/users.php"
+    },    
+    customer : {
+       url : "https://www.allpacksfc.com/allpacks-backend/api/customers.php"
     }
   }
 };

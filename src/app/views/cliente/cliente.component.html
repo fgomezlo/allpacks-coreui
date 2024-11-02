@@ -1,1 +1,378 @@
-<p>cliente works!</p>
+<h1 class="text-primary text-center">
+    Administración de Clientes
+</h1>
+<c-row [xs]="12">
+    <c-col>
+        <form cForm
+            [formGroup]="simpleForm" 
+            novalidate
+        >
+        <c-input-group class="mb-3">
+            <input aria-describedby="search"
+                   aria-label="Escribe el valor del campo por el que quieres filtrar"
+                   cFormControl
+                   formControlName="filtervalue" 
+                   placeholder="Escribe el valor del campo por el que quieres filtrar"
+            />
+            <button cButton 
+                color="secondary" 
+                id="search" 
+                type="button" 
+                variant="outline"
+                (click)="searchFilter()"
+                >
+                <svg cIcon name="cilSearch"></svg>
+            </button>
+            <button cButton 
+                color="primary"
+                id="adduser" 
+                type="button" 
+                variant="outline"
+                (click)="openModal(null)"
+                >
+                <svg cIcon name="cilPlus"></svg>
+                Agregar Cliente
+            </button>
+          </c-input-group>
+        </form>
+    </c-col>
+</c-row>
+<c-row>
+    <c-col >
+        <p class="text-end">
+            Total registros encontrados :
+            <span class="text-primary" >
+                {{data && data.totalitems > 0 ? data.totalitems : 0}}
+            </span>
+        </p> 
+        <c-pagination align="end" aria-label="Page navigation example">
+            <li cPageItem [disabled]="pagination.currentoffset == 0">
+              <button cPageLink [routerLink]="['/usuario']">&lt;</button>
+            </li>
+            <li *ngFor="let page of pagination.pages"
+            cPageItem [active]="page.current" >
+              <button cPageLink 
+              [routerLink]="['/usuario']" 
+              [queryParams]="{offset: page.offset }">{{page.pagenumber}}</button>
+            </li>
+            <li cPageItem>
+                <button cPageLink 
+                [disabled]="pagination.pages.length == 0"
+                [routerLink]="['/usuario']" 
+                [queryParams]="{offset: pagination.pages.lenght > 0 ? pagination.pages[0].offset + pagination.limit : 0}">&gt;</button>
+              </li>
+          </c-pagination>
+    </c-col>
+</c-row>
+<c-row [xs]="12">
+    <c-col *ngIf="data && data.totalitems > 0">
+        <table [striped]="true" cTable [hover]="true" class="text-center">
+            <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Código</th>
+                  <th scope="col">Empresa</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Pais</th>
+                  <th scope="col">Ciudad</th>
+                  <th scope="col">Destino</th>
+                  <th scope="col">Teléfono</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Notas</th>
+                  <th scope="col">Estatus</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data.items; index as i">
+                  <th scope="col">{{ i + 1 }}</th>
+                  <td>{{ item.codigo }}</td>
+                  <td>{{ item.empresa }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ comboDes(item.pais, listcombos.paises) }}</td>
+                  <td>{{ item.ciudad }}</td>
+                  <td>{{ comboDes(item.destino, listcombos.destino) }}</td>
+                  <td>{{ item.telefono }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.notas }}</td>
+                  <td>
+                    <c-badge [color]="item.status == 1 ? 'success' : 'danger'" >
+                        {{item.status == 1 ? 'activo' : 'inactivo'}}
+                    </c-badge>
+                  </td>
+                  <td>
+                    <button
+                        cButton
+                        (click)="openModal(item)"
+                    >
+                        <svg cIcon name="cilPencil"></svg>
+                    </button>
+                    &nbsp;
+                    <button
+                        cButton
+                        color="danger"
+                        (click)="deletecustomer(item)"
+                    >
+                        <svg cIcon name="cilDelete"></svg>
+                    </button>
+                  </td>
+                </tr>
+            </tbody>
+        </table>
+    </c-col>
+</c-row>
+
+<!-- Modals -->
+<c-modal #customermodal
+ id="customermodal" 
+ alignment="center"
+ [visible]="visible" 
+ (visibleChange)="handleModalChange($event)"
+ >
+    <c-modal-header>
+      <h5 cModalTitle>Información de Cliente</h5>
+      <button [cModalToggle]="customermodal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      <!-- ng-container *ngTemplateOutlet="longContent"></ng-container -->
+      <form cForm 
+      [formGroup]="customerForm" 
+      novalidate 
+      >
+
+      <c-tabs [activeItemKey]="0" >
+        <c-tabs-list layout="justified" variant="tabs">
+          <button cTab [itemKey]="0">General</button>
+          <button cTab [itemKey]="1">Seguridad</button>
+        </c-tabs-list>
+        <c-tabs-content>
+          <c-tab-panel class="p-3" [itemKey]="0" >
+
+            <!-- General TAb Content -->
+            <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  Codigo
+                </span>
+                <input 
+                formControlName="codigo" 
+                cFormControl 
+                placeholder="Codigo Stephy" 
+                >
+              </c-input-group>
+            
+            <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilUser"></svg>
+                </span>
+                
+                <input 
+                formControlName="name" 
+                cFormControl 
+                placeholder="Nombre" 
+                [valid]="name.touched && name.valid ? true : 
+                name.touched && name.invalid ? false : undefined"
+                />
+                <c-form-feedback *ngIf="name.invalid" [valid]="!name.invalid">
+                    <ng-container *ngIf="name.errors as errors">
+                    <p *ngIf="errors['required']">El nombre no puede estar vacío</p>
+                    </ng-container>
+                </c-form-feedback>
+              </c-input-group>
+    
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilEnvelopeClosed"></svg>
+                </span>
+                
+                <input 
+                formControlName="email" 
+                cFormControl 
+                placeholder="ejemplo@ejemplo.com" 
+                [valid]="email.touched && email.valid ? true : 
+                email.touched && email.invalid ? false : undefined"
+                />
+                <c-form-feedback *ngIf="email.invalid" [valid]="!email.invalid">
+                    <ng-container *ngIf="email.errors as errors">
+                    <p *ngIf="errors['required']">correo no puede estar vacío</p>
+                    <p *ngIf="errors['email']">Introduzca un correo válido</p>
+                    </ng-container>
+                </c-form-feedback>
+              </c-input-group>
+              
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  Empresa
+                </span>
+                
+                <input 
+                formControlName="empresa" 
+                cFormControl 
+                placeholder="" 
+                />
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  Direccion
+                </span>
+                
+                <textarea 
+                formControlName="direccion" 
+                cFormControl 
+                placeholder="" 
+                ></textarea>
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  Ciudad
+                </span>
+                <input 
+                formControlName="ciudad" 
+                cFormControl 
+                placeholder="" 
+                >
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  Estado
+                </span>
+                <input 
+                formControlName="estado" 
+                cFormControl 
+                placeholder="" 
+                >
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  Pais
+                </span>
+                <select formControlName="pais" cSelect>
+                    <option>Seleccione Pais</option>
+                    <option *ngFor="let itempais of listcombos.paises" 
+                    [value]="itempais['id']">{{itempais['des']}}</option>
+                </select>
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  Destino
+                </span>
+                <select formControlName="destino" cSelect>
+                    <option>Seleccione Destino</option>
+                    <option *ngFor="let itemdestino of listcombos.destino" 
+                    [value]="itemdestino['id']">{{itemdestino['des']}}</option>
+                </select>
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  telefono
+                </span>
+                <input 
+                formControlName="telefono" 
+                cFormControl 
+                placeholder="" 
+                >
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  Notas
+                </span>
+                
+                <textarea 
+                formControlName="notas" 
+                cFormControl 
+                placeholder="" 
+                ></textarea>
+              </c-input-group>  
+            
+          </c-tab-panel>
+          <c-tab-panel class="p-3" [itemKey]="1">
+            
+            <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <!-- svg cIcon name="cilEnvelopeClosed"></svg -->
+                  Estatus
+                </span>
+                <select formControlName="status" cSelect
+                [valid]="status.touched && status.valid ? true : 
+                status.touched && status.invalid ? false : undefined"
+                >
+                    <option [value]="1">Activo</option>
+                    <option [value]="0">Deshabilitado</option>
+                </select>
+                <c-form-feedback *ngIf="status.invalid" [valid]="!status.invalid">
+                    <ng-container *ngIf="status.errors as errors">
+                    <p *ngIf="errors['required']">Debes seleccionar estatus del cliente</p>
+                    </ng-container>
+                </c-form-feedback>
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilLockLocked"></svg>
+                  clave
+                </span>
+                
+                <input 
+                formControlName="password" 
+                cFormControl 
+                placeholder="" 
+                [valid]="password.touched && password.valid ? true : 
+                password.touched && password.invalid ? false : undefined"
+                />
+                <c-form-feedback *ngIf="password.invalid" [valid]="!password.invalid">
+                    <ng-container *ngIf="password.errors as errors">
+                    <p *ngIf="errors['required']">El campo no puede estar en blanco</p>
+                    </ng-container>
+                </c-form-feedback>
+
+                <input 
+                formControlName="passwordconfirmed" 
+                cFormControl 
+                placeholder="" 
+                [valid]="passwordconfirmed.touched && passwordconfirmed.valid ? true : 
+                passwordconfirmed.touched && passwordconfirmed.invalid ? false : undefined"
+                />
+
+                <c-form-feedback *ngIf="passwordconfirmed.invalid" [valid]="!passwordconfirmed.invalid">
+                    <ng-container *ngIf="passwordconfirmed.errors as errors">
+                    <p *ngIf="errors['required']">El campo no puede estar en blanco</p>
+                    <p *ngIf="errors['matchpass']">las claves no coinciden</p>
+                    </ng-container>
+                </c-form-feedback>
+              </c-input-group>
+          </c-tab-panel>
+        </c-tabs-content>
+      </c-tabs>
+
+
+          
+      </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="customermodal.id" cButton color="secondary">
+        Cerrar
+      </button>
+      <button cButton 
+      
+      color="primary" (click)="savecustomer()">
+        <svg cIcon class="me-2" name="cilSave"></svg>
+        Guardar
+      </button>
+    </c-modal-footer>
+  </c-modal>
+
