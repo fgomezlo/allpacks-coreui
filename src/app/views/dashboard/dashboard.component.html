@@ -25,14 +25,14 @@
   </c-col>
   <c-col md="4" class="d-grid" *ngIf="isAvailable(['Administrador', 'Usuario'])">
     
-      <a class="m-1" cButton color="warning" [routerLink]="['/consolidacion/consultar']">
+      <a class="m-1" cButton color="warning" [routerLink]="['/consolidacion/reempaque']">
         <svg cIcon class="me-2" name="cilAirplaneMode"></svg>
         Reempaque
       </a>
     
   </c-col>
   <c-col md="4" class="d-grid" *ngIf="isAvailable(['Administrador', 'Usuario'])">
-      <a class="m-1" cButton color="danger" [routerLink]="['/consolidacion/reempaque']" >
+      <a class="m-1" cButton color="danger" [routerLink]="['/consolidacion/delivery']" >
         <svg cIcon class="me-2" name="cilSearch"></svg>
         Buscar Por Tracking
       </a>

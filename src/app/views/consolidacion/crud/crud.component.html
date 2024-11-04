@@ -1,1 +1,312 @@
-<p>crud works!</p>
+<h1 class="text-primary text-left">
+    Gestión de {{ params.title }}
+</h1>
+<c-row [xs]="12">
+    <c-col [md]="9">
+        <form cForm
+            [formGroup]="simpleForm" 
+            novalidate
+        >
+        <c-row >
+            <c-col [md]="12"  >
+                <c-input-group class="mb-3">
+                <input aria-describedby="search"
+                       aria-label="<ultimos 5 numeros codigo consolidacion> | <codigo cliente> "
+                       cFormControl
+                       formControlName="filtervalue" 
+                       placeholder="<codigocliente> | <codigo cliente> "
+                />
+                <button cButton 
+                    color="secondary" 
+                    id="search" 
+                    type="button" 
+                    variant="outline"
+                    (click)="searchFilter()"
+                    >
+                    <svg cIcon name="cilSearch"></svg>
+                </button>
+                <button cButton 
+                    color="primary"
+                    id="adduser" 
+                    type="button" 
+                    variant="outline"
+                    (click)="openModal(null)"
+                    >
+                    <svg cIcon name="cilPlus"></svg>
+                    Agregar Consolidación
+                </button>
+            </c-input-group>
+            </c-col>
+            <c-col [md]="6">
+                <div class="dp-hidden position-absolute">
+                    <input
+					class="form-control"
+					ngbDatepicker
+					#datepicker="ngbDatepicker"
+					[autoClose]="'outside'"
+					(dateSelect)="onDateSelection($event)"
+					[displayMonths]="2"
+					[dayTemplate]="t"
+					outsideDays="hidden"
+					[startDate]="fromDate!"
+					tabindex="-1"
+				/>
+                <ng-template #t let-date let-focused="focused">
+					<span
+						class="custom-day"
+						[class.focused]="focused"
+						[class.range]="isRange(date)"
+						[class.faded]="isHovered(date) || isInside(date)"
+						(mouseenter)="hoveredDate = date"
+						(mouseleave)="hoveredDate = null"
+					>
+						{{ date.day }}
+					</span>
+				</ng-template>
+                </div>
+                <c-input-group class="mb-3">
+                    <input aria-describedby="search"
+                        cFormControl
+                        formControlName="dpFrom" 
+                        placeholder="Desde (dd/mm/yyyy)"
+                        ngbDatepicker
+                        #dpFromDate
+                        [value]="formatter.format(fromDate)"
+                        (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+                    />
+                    <input aria-describedby="search"
+                        cFormControl
+                        formControlName="dpTo" 
+                        placeholder="Hasta (dd/mm/yyyy)"
+                        ngbDatepicker
+                        #dpToDate
+                        [value]="formatter.format(toDate)"
+                        (input)="toDate = validateInput(toDate, dpToDate.value)"
+                    />
+                    <button cButton 
+                    color="primary"
+                    type="button" 
+                    variant="outline"
+                    (click)="datepicker.toggle()"
+                    >
+                    <svg cIcon name="cilCalendar"></svg>
+                    </button>
+                </c-input-group>
+            </c-col>
+            <c-col [md]="6">
+                <c-row>
+                    <c-col [md]="2">Filtro Estatus</c-col>
+                    <c-col [md]="10">
+                        <c-row formArrayName="estatusconsolidacion">
+                            <c-col *ngFor="let status of estatusconsolidacion.controls; index as i">
+                            <c-form-check  >
+                                <input [checked]="true" 
+                                cFormCheckInput 
+                                [formControlName]="i"
+                                [id]="'status'+ i" type="checkbox" 
+                                 />
+                                <label cFormCheckLabel [for]="'status'+ i">{{listcombos.estado[i]["des"]}}</label>
+                              </c-form-check>
+                            </c-col>
+                        </c-row>
+                        
+                    </c-col>
+                </c-row>
+            </c-col>
+        </c-row>
+        </form>
+    </c-col>
+    <c-col [md]="3">
+        <app-custom-pagination
+            [data]="data"
+            [routerPath]="'/consolidacion/' + segmento"
+        ></app-custom-pagination>
+    </c-col>
+</c-row>
+<c-row [xs]="12">
+    <c-col *ngIf="data && data.totalitems > 0">
+        <table [striped]="true" cTable [hover]="true" class="text-center">
+            <thead>
+                <tr>
+                <th scope="col">Imprimir</th>
+                <th scope="col">No Consolidacion</th>
+                <th scope="col">Tipo de Servicio</th>
+                <th scope="col">Código cliente</th>
+                <th scope="col">Nota Cliente</th>
+                <th scope="col">Cantidad Items</th>
+                <th scope="col">Fecha recibido</th>
+                <th scope="col">Fecha modificación</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Estatus</th>
+                <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data.items; index as i" [class]="getColorByEstadoId(item.status, listcombos.estatuscolor)">
+                <th scope="col">
+                    <c-form-check class="pt-2">
+                        <input type="checkbox" cFormCheckInput [value]="item.id" class="itemprint" />
+                    </c-form-check>
+                </th>
+                <td>{{ item.codigo }}</td>
+                <td>{{ comboDes(item.tiposervicio, listcombos.tiposervicio) }}</td>
+                <td> {{item.cliente.codigo}} </td>
+                <td>{{ item.nota }}</td>
+                <td>{{ item.items.length }}</td>
+                <td> {{item.datecreated}} </td>
+                <td> {{item.dateupdated}} </td>
+                <td> {{item.usuario?.name}}  </td>
+                <td>
+                    {{ comboDes(item.status, listcombos.estado) }}
+                </td>
+                <td class="text-nowrap">
+                    <button
+                        cButton
+                        (click)="openModal(item)"
+                    >
+                        <svg cIcon name="cilPencil"></svg>
+                    </button>
+                    &nbsp;
+                    <button
+                        cButton
+                        color="danger"
+                        (click)="deleteconsolidacion(item)"
+                    >
+                        <svg cIcon name="cilDelete"></svg>
+                    </button>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+    </c-col>
+</c-row>
+
+<c-modal #consolidacionModalEstatus
+ id="consolidacionModalEstatus" 
+ alignment="center"
+ [visible]="visible.consolidacionModalEstatus" 
+ (visibleChange)="handleModalChange($event, 'consolidacionModalEstatus')"
+ size="xl"
+ >
+    <c-modal-header>
+      <h5 cModalTitle>Información de {{ this.params["title"] }}</h5>
+      <button [cModalToggle]="consolidacionModalEstatus.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      <!-- ng-container *ngTemplateOutlet="longContent"></ng-container -->
+      <form cForm 
+      [formGroup]="changeStatusConsolidacionForm" 
+      novalidate 
+      >
+      <c-container *ngIf="currentconsolidacion" >
+        <c-row>
+            <c-col [sm]="3"  >
+                Código:
+            </c-col>
+            <c-col [sm]="9" class="fw-bold" >
+                {{currentconsolidacion.codigo}}
+            </c-col>
+        </c-row>
+        <c-row class="mt-2">
+            <c-col [sm]="3" >
+                Fecha Ult Mod -- Fecha Creado :
+            </c-col>
+            <c-col [sm]="9" >
+                {{currentconsolidacion.dateupdated}} -- {{currentconsolidacion.datecreated}}
+            </c-col>
+        </c-row>
+        <c-row class="mt-2">
+            <c-col [sm]="3" >
+                Cliente :
+            </c-col>
+            <c-col [sm]="9" class="fw-bold">
+                {{currentconsolidacion.cliente.name}} ({{currentconsolidacion.cliente.codigo}})
+            </c-col>
+        </c-row>
+        <c-row class="mt-2">
+            <c-col [sm]="3" >
+                Estatus del {{params["title"]}} :
+            </c-col>
+            <c-col [sm]="9" >
+                <select formControlName="status" cSelect>
+                    <option *ngFor="let status of listcombos.estado" [value]="status['id']">{{status['des']}}</option>
+                  </select>
+            </c-col>
+        </c-row>
+        <c-row class="mt-2">
+            <c-col [sm]="12">
+                <p>Paquetes registrados en {{params["title"]}}</p>
+                <table  
+                cTable [hover]="true" 
+                class="text-center mt-2">
+                    <thead>
+                        <tr [class]="getColorByEstadoId(currentconsolidacion.status, listcombos.estatuscolor)">
+                        <th scope="col">#</th>
+                        <th scope="col">Carrier</th>
+                        <th scope="col">Tracking</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Warehouse</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of currentconsolidacion.items; index as i" >
+                        <th scope="col">
+                            {{i + 1}}
+                        </th>
+                        <td>{{ item.carrier }}</td>
+                        <td>{{ item.tracking }}</td>
+                        <td>{{ item.descripcion }}</td>
+                        <td>{{ item.warehouse }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </c-col>
+        </c-row>
+      </c-container>
+      </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="consolidacionModalEstatus.id" cButton color="secondary">
+        Cerrar
+      </button>
+      <button cButton 
+      
+      color="primary" (click)="changeStatus()">
+        <svg cIcon class="me-2" name="cilSave"></svg>
+        Guardar
+      </button>
+    </c-modal-footer>
+  </c-modal>
+
+  <c-modal #consolidacion
+ id="consolidacion" 
+ alignment="center"
+ [visible]="visible.consolidacion" 
+ (visibleChange)="handleModalChange($event, 'consolidacion')"
+ size="lg"
+ >
+    <c-modal-header>
+      <h5 cModalTitle>Agregar un nuevo {{ this.params["title"] }}</h5>
+      <button [cModalToggle]="consolidacion.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      <!-- ng-container *ngTemplateOutlet="longContent"></ng-container -->
+      <form cForm 
+      [formGroup]="consolidacionForm" 
+      novalidate 
+      >
+
+      </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="consolidacion.id" cButton color="secondary">
+        Cerrar
+      </button>
+      <button cButton 
+      
+      color="primary" (click)="saveconsolidacion()">
+        <svg cIcon class="me-2" name="cilSave"></svg>
+        Guardar
+      </button>
+    </c-modal-footer>
+  </c-modal>

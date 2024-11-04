@@ -30,6 +30,7 @@ import {
 import { IconModule } from '@coreui/icons-angular';
 import _ from 'lodash';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha-2';
+import { CustomPaginationComponent } from 'src/app/components/custom-pagination/custom-pagination.component';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
 
@@ -56,7 +57,8 @@ import Swal from 'sweetalert2';
     TabPanelComponent,
     TabsContentComponent,
     TabsListComponent,
-    TabDirective
+    TabDirective,
+    CustomPaginationComponent
   ],
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.scss',
@@ -65,12 +67,6 @@ export class UsuarioComponent implements OnInit {
   simpleForm!: FormGroup;
   userForm!: FormGroup;
   data: any;
-  pagination: any = {
-    totalitems: 0,
-    pages: [],
-    limit: 10,
-    currentoffset: 0,
-  };
   params: any[any] | null = [];
   updateuser: any = null;
   rollist : any[] = [];
@@ -105,35 +101,11 @@ export class UsuarioComponent implements OnInit {
       .then((response) => {
         this.data = response;
         //console.log(this.data)
-        this.pagination.limit = this.data.limit;
-        this.calcPagination(this.data.totalitems, this.data.offset);
       })
       .catch((error) => {
-        Swal.fire('UPS !!', error.message, 'error');
         this.data = null;
-        this.pagination.totalitems = 0;
-        this.pagination.currentoffset = 0;
-        this.pagination.limit = 10;
+        Swal.fire('UPS !!', error.message, 'error');
       });
-  }
-
-  calcPagination(totalitems: number, offset: number) {
-    let pages = totalitems / this.pagination.limit + 1;
-    let currentPage = offset / this.pagination.limit + 1;
-
-    let itempages: any[] = [];
-    for (let i = 1; i <= pages; i++) {
-      let item = {
-        offset: (i - 1) * this.pagination.limit,
-        pagenumber: i,
-        current: currentPage == i,
-      };
-
-      itempages.push(item);
-    }
-
-    this.pagination.currentoffset = offset;
-    this.pagination.pages = itempages;
   }
 
   searchFilter() {
@@ -245,9 +217,9 @@ export class UsuarioComponent implements OnInit {
       }
     })
     
-    console.log("roles" , selectedRoles);
+/*    console.log("roles" , selectedRoles);
     console.log("userform", this.userForm.value);
-
+*/
     let sendform : any = this.userForm.value;
     sendform.roles = selectedRoles;
     

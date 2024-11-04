@@ -1,8 +1,8 @@
-<h1 class="text-primary text-center">
-    Administración de Clientes
+<h1 class="text-primary">
+    Gestión de Clientes
 </h1>
 <c-row [xs]="12">
-    <c-col>
+    <c-col [md]="9">
         <form cForm
             [formGroup]="simpleForm" 
             novalidate
@@ -36,34 +36,14 @@
           </c-input-group>
         </form>
     </c-col>
-</c-row>
-<c-row>
-    <c-col >
-        <p class="text-end">
-            Total registros encontrados :
-            <span class="text-primary" >
-                {{data && data.totalitems > 0 ? data.totalitems : 0}}
-            </span>
-        </p> 
-        <c-pagination align="end" aria-label="Page navigation example">
-            <li cPageItem [disabled]="pagination.currentoffset == 0">
-              <button cPageLink [routerLink]="['/usuario']">&lt;</button>
-            </li>
-            <li *ngFor="let page of pagination.pages"
-            cPageItem [active]="page.current" >
-              <button cPageLink 
-              [routerLink]="['/usuario']" 
-              [queryParams]="{offset: page.offset }">{{page.pagenumber}}</button>
-            </li>
-            <li cPageItem>
-                <button cPageLink 
-                [disabled]="pagination.pages.length == 0"
-                [routerLink]="['/usuario']" 
-                [queryParams]="{offset: pagination.pages.lenght > 0 ? pagination.pages[0].offset + pagination.limit : 0}">&gt;</button>
-              </li>
-          </c-pagination>
+    <c-col [md]="3">
+        <app-custom-pagination
+            [data]="data"
+            [routerPath]="'/cliente'"
+        ></app-custom-pagination>
     </c-col>
 </c-row>
+
 <c-row [xs]="12">
     <c-col *ngIf="data && data.totalitems > 0">
         <table [striped]="true" cTable [hover]="true" class="text-center">
@@ -100,7 +80,7 @@
                         {{item.status == 1 ? 'activo' : 'inactivo'}}
                     </c-badge>
                   </td>
-                  <td>
+                  <td class="text-nowrap">
                     <button
                         cButton
                         (click)="openModal(item)"

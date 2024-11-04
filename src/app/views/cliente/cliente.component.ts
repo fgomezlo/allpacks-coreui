@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { CommonModule } from '@angular/common';
 import { BadgeModule, ButtonModule, ColComponent, FormModule, ModalModule, PaginationModule, RowComponent, TabDirective, TableModule, TabPanelComponent, TabsComponent, TabsContentComponent, TabsListComponent } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
+import { CustomPaginationComponent } from 'src/app/components/custom-pagination/custom-pagination.component';
 
 @Component({
   selector: 'app-cliente',
@@ -29,6 +30,7 @@ import { IconModule } from '@coreui/icons-angular';
     IconModule,
     ButtonModule,
     RouterLink,
+    CustomPaginationComponent
   ],
   templateUrl: './cliente.component.html',
   styleUrl: './cliente.component.scss'
@@ -38,12 +40,6 @@ export class ClienteComponent implements OnInit {
   simpleForm!: FormGroup;
   customerForm!: FormGroup;
   data: any; // pagination data
-  pagination: any = {
-    totalitems: 0,
-    pages: [],
-    limit: 10,
-    currentoffset: 0,
-  };
   params: any[any] | null = []; // for filter object pagination
   
   // combobox options
@@ -84,36 +80,11 @@ export class ClienteComponent implements OnInit {
       .then((response) => {
         this.data = response;
         //console.log(this.data)
-        this.pagination.limit = this.data.limit;
-        this.calcPagination(this.data.totalitems, this.data.offset);
       })
       .catch((error) => {
-        Swal.fire('UPS !!', error.message, 'error');
         this.data = null;
-        this.pagination.totalitems = 0;
-        this.pagination.currentoffset = 0;
-        this.pagination.limit = 10;
+        Swal.fire('UPS !!', error.message, 'error');
       });
-  }
-
-  calcPagination(totalitems: number, offset: number) {
-    let pages = totalitems / this.pagination.limit + 1;
-    let currentPage = offset / this.pagination.limit + 1;
-
-    let itempages: any[] = [];
-    let initpages = 1; 
-    for (let i = initpages; i <= pages && i < (initpages + 5) ; i++) {
-      let item = {
-        offset: (i - 1) * this.pagination.limit,
-        pagenumber: i,
-        current: currentPage == i,
-      };
-
-      itempages.push(item);
-    }
-
-    this.pagination.currentoffset = offset;
-    this.pagination.pages = itempages;
   }
 
   searchFilter() {

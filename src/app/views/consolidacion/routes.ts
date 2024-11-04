@@ -16,11 +16,20 @@ export const routes: Routes = [
         path: 'consultar',
         loadComponent: () => import('./crud/crud.component').then(m => m.CrudComponent),
         data: {
-          title: 'Consultar'
+          title: 'Consolidaciones',
+          servicetype: {id : 2, name: "maritimo"}
         }
       },
       {
         path: 'reempaque',
+        loadComponent: () => import('./crud/crud.component').then(m => m.CrudComponent),
+        data: {
+          title: 'Reempaques',
+          servicetype: {id : 1, name: "aereo"}
+        }
+      },
+      {
+        path: 'delivery',
         loadComponent: () => import('./reempaque/reempaque.component').then(m => m.ReempaqueComponent),
         data: {
           title: 'Por Tracking'

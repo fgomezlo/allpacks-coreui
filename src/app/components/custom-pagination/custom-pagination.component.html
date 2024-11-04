@@ -1,0 +1,34 @@
+<p class="text-end">
+    Total registros encontrados :
+    <span class="text-primary" >
+        {{pagination && pagination.totalitems > 0 ? pagination.totalitems : 0}}
+    </span>
+</p> 
+<c-container *ngIf="pagination && pagination.totalitems > 0">
+
+    <c-pagination 
+    align="end" aria-label="Page navigation example">
+        <li cPageItem 
+            [disabled]="pagination.currentoffset - pagination.limit < 0"
+        >
+          <button cPageLink 
+          [routerLink]="[routerPath]"
+          [queryParams]="{offset: pagination.currentoffset - pagination.limit}"
+          >&lt;</button>
+        </li>
+        <li *ngFor="let page of pagination.pages"
+        cPageItem [active]="page.current" >
+          <button cPageLink 
+          [routerLink]="[routerPath]" 
+          [queryParams]="{offset: page.offset }">{{page.pagenumber}}</button>
+        </li>
+        <li cPageItem 
+        [disabled]="(pagination.currentoffset + pagination.limit) >= pagination.totalitems">
+            <button cPageLink 
+            [routerLink]="[routerPath]" 
+            [queryParams]="{offset: (+pagination.currentoffset + pagination.limit) }"
+            >&gt;</button>
+          </li>
+      </c-pagination>
+
+</c-container>

@@ -13,6 +13,9 @@ export const environment = {
     },    
     customer : {
        url : "http://localhost/allpacks-backend/api/customers.php"
+    },    
+    consolidacion : {
+       url : "http://localhost/allpacks-backend/api/consolidacion.php"
     }    
   }
 };

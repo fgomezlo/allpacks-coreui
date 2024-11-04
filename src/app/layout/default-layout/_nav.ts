@@ -52,7 +52,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Reempaque',
-    url: '/consolidacion/consultar',
+    url: '/consolidacion/reempaque',
     iconComponent: { name: 'cil-airplane-mode' },
     attributes : {
       "allow" : ["Administrador", "Usuario"],
@@ -61,7 +61,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Por Tracking',
-    url: '/consolidacion/reempaque',
+    url: '/consolidacion/delivery',
     /*linkProps: { fragment: 'headings' },*/
     iconComponent: { name: 'cil-search' },
     attributes : {
