@@ -42,6 +42,30 @@ export class ConsolidacionService {
       options).toPromise();
   }
 
+  tracking(params: any[any] | null) {
+
+    const options = {
+      headers : new HttpHeaders({
+        'Content-Type' : 'application/json',
+        'access-token' : this.accesstoken
+      }),
+      responseType: 'json' as const
+    };
+    
+    let body = {
+        "function" : "tracking",
+//        "offset" : params && params["offset"] ? params["offset"] : null
+    };
+
+    body = _.merge(body, params)
+
+    //console.log(JSON.stringify(body));
+
+    return this.http.post(this.url, 
+      body, 
+      options).toPromise();
+  }
+
   estadoList() {
     const options = {
       headers : new HttpHeaders({
@@ -110,6 +134,26 @@ export class ConsolidacionService {
         "function" : "changestatusconsolidacion",
         "id" : id,
         "status" : status
+    };
+
+    return this.http.post(this.url, 
+      body, 
+      options).toPromise();
+  }
+
+  savetracking(id:string , paquetes: any) {
+    const options = {
+      headers : new HttpHeaders({
+        'Content-Type' : 'application/json',
+        'access-token' : this.accesstoken
+      }),
+      responseType: 'json' as const
+    };
+
+    let body = {
+        "function" : "savetracking",
+        "id" : id,
+        "paquetes" : paquetes
     };
 
     return this.http.post(this.url, 

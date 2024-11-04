@@ -1,1 +1,247 @@
-<p>reempaque works!</p>
+<h1 class="text-primary text-left">
+    Buscar reempaques por Tracking
+</h1>
+<c-row [xs]="12">
+    <c-col [md]="9">
+        <form cForm
+            [formGroup]="simpleForm" 
+            novalidate
+        >
+        <c-row >
+            <c-col [md]="12"  >
+                <c-input-group class="mb-3">
+                <input aria-describedby="search"
+                       aria-label="<tracking> | <codigo cliente>"
+                       cFormControl
+                       formControlName="filtervalue" 
+                       placeholder="<tracking> | <codigo cliente>"
+                />
+                <button cButton 
+                    color="secondary" 
+                    id="search" 
+                    type="button" 
+                    variant="outline"
+                    (click)="searchFilter()"
+                    >
+                    <svg cIcon name="cilSearch"></svg>
+                </button>
+            </c-input-group>
+            </c-col>
+        </c-row>
+        </form>
+    </c-col>
+    <c-col [md]="3">
+        <app-custom-pagination
+            [data]="data"
+            [routerPath]="'/consolidacion/' + segmento"
+        ></app-custom-pagination>
+    </c-col>
+</c-row>
+<c-row [xs]="12">
+    <c-col *ngIf="data && data.totalitems > 0">
+        <table cTable borderless [hover]="true" >
+            <thead class="text-center">
+                <tr>
+                <th scope="col" >No Consolidacion</th>
+                <th scope="col" >Tipo de Servicio</th>
+                <th scope="col" >Nombre Cliente</th>
+                <th>No</th>
+                    <th>Carrier</th>
+                    <th>Nro tracking</th>
+                    <th>Warehouse</th>
+                    <th>Factura</th>
+                <th scope="col" >Fecha recibido</th>
+                <th scope="col" >Fecha modificación</th>
+                <th scope="col" >Estatus</th>
+                <th scope="col" ></th>
+                </tr>
+            </thead>
+            <tbody>
+                <c-container *ngFor="let consolidacion of data.items; index as i" 
+                [class]="getColorByEstadoId(consolidacion.status, listcombos.estatuscolor)" 
+                class="displaycontents">
+                    <tr >
+                        <th scope="col" [rowSpan]="consolidacion.items.length">
+                            {{ consolidacion.codigo }}
+                        </th>
+                        <td [rowSpan]="consolidacion.items.length">{{ comboDes(consolidacion.tiposervicio, listcombos.tiposervicio) }}</td>
+                        <td [rowSpan]="consolidacion.items.length" > 
+                            {{consolidacion.cliente.name + " (" + consolidacion.cliente.codigo + ")"}} 
+                        </td>
+                        <td>1</td>
+                        <td>{{ consolidacion.items[0].carrier }}</td>
+                        <td>{{ consolidacion.items[0].tracking }}</td>
+                        <td>{{ consolidacion.items[0].warehouse }}</td>
+                        <td><a [href]="consolidacion.items[0].urlfactura" target="_blank" >Fact 1</a></td>
+                        <td [rowSpan]="consolidacion.items.length">
+                            {{ consolidacion.datecreated }}
+                        </td>
+                        <td [rowSpan]="consolidacion.items.length">
+                            {{ consolidacion.dateupdated }}
+                        </td>
+                        <td [rowSpan]="consolidacion.items.length">
+                            {{ comboDes(consolidacion.status, listcombos.estado) }}
+                        </td>
+                        <td [rowSpan]="consolidacion.items.length" class="text-nowrap" >
+                            <button  cButton (click)="openModal(consolidacion)" >
+                                <svg cIcon name="cilPencil"></svg>
+                            </button>
+                            <button  cButton color="warning" class="ml-1" >
+                                <svg cIcon name="cilPrint"></svg>
+                            </button>
+                            <button *ngIf="!showCompleteButton(consolidacion.items)" cButton color="danger" class="ml-1" >
+                                <svg cIcon name="cilDelete"></svg>
+                            </button>
+                            <button *ngIf="showCompleteButton(consolidacion.items)" cButton color="success" class="ml-1" >
+                                <svg cIcon name="cilCheck"></svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let moreitems of consolidacion.items | slice:1; index as j" [class]="getColorByEstadoId(consolidacion.status, listcombos.estatuscolor)">
+                        <td>{{j + 2}}</td>
+                        <td>{{ consolidacion.items[j+1].carrier }}</td>
+                        <td>{{ consolidacion.items[j+1].tracking }}</td>
+                        <td>{{ consolidacion.items[j+1].warehouse }}</td>
+                        <td><a [href]="consolidacion.items[j+1].urlfactura" target="_blank" >Fact {{j + 2}}</a></td>
+                    </tr>
+                </c-container>
+                    
+            </tbody>
+        </table>
+    </c-col>
+</c-row>
+<c-modal #consolidacionModal
+ id="consolidacionModalEstatus" 
+ alignment="center"
+ [visible]="visible" 
+ (visibleChange)="handleModalChange($event)"
+ size="xl"
+ >
+    <c-modal-header>
+      <h5 cModalTitle>Información de reempaque o consolidación</h5>
+      <button [cModalToggle]="consolidacionModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      <!-- ng-container *ngTemplateOutlet="longContent"></ng-container -->
+      <form cForm 
+      [formGroup]="consolidacionForm" 
+      novalidate 
+      >
+      <c-container *ngIf="currentconsolidacion" >
+        <c-row>
+            <c-col [sm]="2"  >
+                Nro Reempaque:
+            </c-col>
+            <c-col [sm]="4" class="fw-bold" >
+                {{currentconsolidacion.codigo}}
+            </c-col>
+            <c-col [sm]="2"  >
+                Fecha recibido:
+            </c-col>
+            <c-col [sm]="4" class="fw-bold" >
+                {{currentconsolidacion.datecreated}}
+            </c-col>
+        </c-row>
+        <c-row class="mt-2">
+            <c-col [sm]="2" >
+                Cliente :
+            </c-col>
+            <c-col [sm]="4" class="fw-bold">
+                {{currentconsolidacion.cliente.name}} ({{currentconsolidacion.cliente.codigo}})
+            </c-col>
+            <c-col [sm]="2" >
+                Fecha Ultima Act. :
+            </c-col>
+            <c-col [sm]="4" class="fw-bold">
+                {{currentconsolidacion.dateupdated}}
+            </c-col>
+        </c-row>
+        <c-row class="mt-2">
+            <c-col [sm]="2" >
+                Estatus: 
+            </c-col>
+            <c-col [sm]="4" >
+                {{ comboDes(currentconsolidacion.status, listcombos.estado) }}
+            </c-col>
+            <c-col [sm]="2" >
+                Usuario Última Act.: 
+            </c-col>
+            <c-col [sm]="4" >
+                {{ currentconsolidacion.usuario ?  currentconsolidacion.usuario.name : 'NA' }}
+            </c-col>
+        </c-row>
+        <c-row class="mt-2">
+            <c-col [sm]="2" >
+                Tipo de Servicio:
+            </c-col>
+            <c-col [sm]="4" >
+                {{ comboDes(currentconsolidacion.tiposervicio, listcombos.tiposervicio) }}
+            </c-col>
+            <c-col [sm]="2" >
+                Total Valor:
+            </c-col>
+            <c-col [sm]="4" >
+                {{ getTotalPackageSelected() }}
+            </c-col>
+        </c-row>
+        <c-row class="mt-2">
+            <c-col [sm]="12">
+                <p>Paquetes registrados en la consolidación o reempaque</p>
+                <table  
+                cTable [hover]="true" 
+                class="text-center mt-2">
+                    <thead>
+                        <tr [class]="getColorByEstadoId(currentconsolidacion.status, listcombos.estatuscolor)">
+                        <th scope="col">#</th>
+                        <th scope="col">Carrier</th>
+                        <th scope="col">Tracking</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Valor Artículo</th>
+                        <th scope="col">Warehouse</th>
+                        <th scope="col">Nota</th>
+                        <th scope="col">
+                            <a cButton (click)="allCheckedTotalizar()">
+                                Totalizar
+                            </a>
+                        </th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="paquetes" >
+                        <tr *ngFor="let control of paquetes.controls; index as i" [formGroupName]="i">
+                        <th scope="col">
+                            {{i + 1}}
+                        </th>
+                        <td>{{ currentconsolidacion.items[i].carrier }}</td>
+                        <td>{{ currentconsolidacion.items[i].tracking }}</td>
+                        <td>{{ currentconsolidacion.items[i].descripcion }}</td>
+                        <td>{{ currentconsolidacion.items[i].valor }}</td>
+                        <td><input cFormControl formControlName="warehouse" placeholder="" type="text" /></td>
+                        <td><textarea rows="1" cFormControl formControlName="nota"></textarea></td>
+                        <td><c-form-check>
+                            <input cFormCheckInput [id]="'t'+i" 
+                                type="checkbox" 
+                                [checked]="totalizar[i].checked"
+                                (change)="changeTotalizarArray(i)" 
+                            />
+                          </c-form-check>
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </c-col>
+        </c-row>
+      </c-container>
+      </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="consolidacionModal.id" cButton color="secondary">
+        Cerrar
+      </button>
+      <button cButton 
+      (click)="saveTrackingData()"
+      color="primary">
+        <svg cIcon class="me-2" name="cilSave"></svg>
+        Guardar
+      </button>
+    </c-modal-footer>
+  </c-modal>
