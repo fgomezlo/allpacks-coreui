@@ -71,6 +71,23 @@ export const navItems: INavData[] = [
   }, 
   {
     title: true,
+    name: 'Herramientas',
+    attributes : {
+      "allow" : ["Administrador", "Usuario"],
+      "active" : true
+    }
+  },
+  {
+    name: 'Calcula Tu Carga',
+    url: '/estimacion',
+    iconComponent: { name: 'cil-calculator' },
+    attributes : {
+      "allow" : ["Administrador", "Usuario"],
+      "active" : true
+    }
+  },
+  {
+    title: true,
     name: 'Configuraciones',
     attributes : {
       "allow" : ["Administrador"],

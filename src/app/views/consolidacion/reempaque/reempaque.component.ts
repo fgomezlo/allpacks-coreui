@@ -52,7 +52,8 @@ export class ReempaqueComponent implements OnInit {
       {id : "2", color: 'warning'},
       {id : "3", color: 'success'},
       {id : "4", color: 'light'},
-      {id : "5", color: 'primary'}
+      {id : "5", color: 'primary'},
+      {id : "6", color: 'info'}
     ]
   }
 
@@ -293,41 +294,46 @@ export class ReempaqueComponent implements OnInit {
 
   }
 
-  completeConsolidacion(consolidacion: any) {
-    
-    Swal.fire(
-     {
-       icon: "warning",
-       title: `Deseas cambiar a 'COMPLETADO' el reempaque '${consolidacion.codigo}' ? `,
-       showCancelButton: true,
-       confirmButtonText: "Sí",
-       cancelButtonText: "No"
-     }
-    ).then(res =>{
-     
-       if (res.isConfirmed) {
-        
-         return this.consolidacionService.changestatus(
-          consolidacion.id, "3"); // defaultcode for completado
-        
-       }
+  async completeConsolidacion(consolidacion: any) {
+
+    const { value: warehouse } = await Swal.fire({
+      icon: "warning",
+      title: `Deseas cambiar a 'REEMPACADO' la consolidacion / reempaque nro '${consolidacion.codigo}' ? `,
+      input: "text",
+      inputLabel: "Nro warehouse reempaque",
+      inputAttributes: {
+        autocapitalize: "off"
+      },
+      showCancelButton: true,
+      confirmButtonText: "Sí",
+      cancelButtonText: "No",
+      inputValidator: (value) => {
+        if (!value) {
+          return "Debes escribir un nro de warehouse";
+        }
+
+        return;
+      }
+    });
+
+    if (warehouse) {
+      
+        this.consolidacionService.changestatusreempacado(
+        consolidacion.id, warehouse)
+        .then((response : any)=>{
  
-       return Promise.reject(null);
-     
-    }).then((response : any)=>{
- 
-     this.searchFilter();
- 
-     let title = response.code != "success" ? "UPS !!!" : "Transacción Exitosa"
-     Swal.fire(title, response.message, response.code);
- 
-    }).catch(error => {
- 
-     if(!error) return;
- 
-     Swal.fire("Ups !!!", "Hubo un problema con el servidor intente nuevamente", 'error');
- 
-    })
- 
+          this.searchFilter();
+      
+          let title = response.code != "success" ? "UPS !!!" : "Transacción Exitosa"
+          Swal.fire(title, response.message, response.code);
+      
+         }).catch(error => {
+      
+          if(!error) return;
+      
+          Swal.fire("Ups !!!", "Hubo un problema con el servidor intente nuevamente", 'error');
+      
+         });
+    }
    }
 }

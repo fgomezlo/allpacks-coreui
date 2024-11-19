@@ -13,6 +13,7 @@
                    cFormControl
                    formControlName="filtervalue" 
                    placeholder="Escribe el valor del campo por el que quieres filtrar"
+                   (keydown.enter)="searchFilter()"
             />
             <button cButton 
                 color="secondary" 

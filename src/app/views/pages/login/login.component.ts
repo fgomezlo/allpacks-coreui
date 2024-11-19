@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, NgStyle } from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import { ContainerComponent, RowComponent, 
@@ -17,7 +17,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
-import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaSettings, RecaptchaModule } from 'ng-recaptcha-2';
+import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaSettings, RecaptchaModule, RecaptchaComponent } from 'ng-recaptcha-2';
 
 
 @Component({
@@ -46,6 +46,9 @@ import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaSettings, RecaptchaM
 })
 export class LoginComponent implements OnInit{
   
+  @ViewChild('reCaptcha') reCaptcha!: RecaptchaComponent;
+  @ViewChild('reCaptchaForgot') reCaptchaForgot!: RecaptchaComponent;
+
   simpleForm!: FormGroup;
   simpleFormRecovery!: FormGroup;
   submitted = false;
@@ -86,6 +89,8 @@ export class LoginComponent implements OnInit{
       //this.simpleForm.reset();
 
     }).catch((errorres)=>{
+      this.recaptcha.reset();
+      this.reCaptcha.reset();
       Swal.fire('Ups !!!', `${errorres.error.msg} - (Code ${errorres.error.error})`, 'error');
     });
 
@@ -93,7 +98,7 @@ export class LoginComponent implements OnInit{
   
   onSubmitRecovery() {
     
-    console.log("call onSubmitRecovery", this.simpleFormRecovery);
+    //console.log("call onSubmitRecovery", this.simpleFormRecovery);
     if (!this.onValidate(this.simpleFormRecovery, "recovery")) { 
       return ;
     }
@@ -104,8 +109,10 @@ export class LoginComponent implements OnInit{
     ).then((response:any)=>{
 
       Swal.fire("Solicitud registrada", "Correo de recuperación enviado exitosamente<br />Por favor revise su correo y siga las instrucciones" ,'success');
-
+      this.reCaptchaForgot.reset();
     }).catch((errorres)=>{
+      this.recaptchaRecovery.reset();
+      this.reCaptchaForgot.reset();
       Swal.fire('Solicitud no procesada', `${errorres.error.msg} - (Code ${errorres.error.error})`, 'error');
     });
 
@@ -164,7 +171,7 @@ export class LoginComponent implements OnInit{
 
   recaptchaForgot(captchaResponse: string | null) {
     
-    console.log(`Resolved captcha with response: ${captchaResponse}`);
+    //console.log(`Resolved captcha with response: ${captchaResponse}`);
     this.recaptchaRecovery.setValue(captchaResponse == null ? "" : captchaResponse);
 
   }

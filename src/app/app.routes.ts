@@ -35,6 +35,10 @@ export const routes: Routes = [
       {
         path: 'parametros',
         loadChildren: () => import('./views/parametros/routes').then((m) => m.routes)
+      },
+      {
+        path: 'estimacion',
+        loadChildren: () => import('./views/estimacion/routes').then((m) => m.routes)
       }
     ]
   },

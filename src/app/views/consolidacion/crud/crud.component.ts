@@ -59,7 +59,8 @@ export class CrudComponent implements OnInit {
       {id : "2", color: 'warning'},
       {id : "3", color: 'success'},
       {id : "4", color: 'light'},
-      {id : "5", color: 'primary'}
+      {id : "5", color: 'primary'},
+      {id : "6", color: 'info'}
     ]
   }
 
@@ -77,7 +78,8 @@ export class CrudComponent implements OnInit {
     
     //modal status form
     this.changeStatusConsolidacionForm = this.formBuilder.group({
-      status : ['', Validators.required]
+      status : ['', Validators.required],
+      whreempaque : ['']
     });
 
     // pagination form
@@ -196,8 +198,10 @@ export class CrudComponent implements OnInit {
     this.visible.consolidacionModalEstatus = !this.visible.consolidacionModalEstatus;
     this.currentconsolidacion = consolidacion;
     let currentvalues = {
-      status : consolidacion.status
+      status : consolidacion.status,
+      whreempaque : consolidacion.whreempaque
     }
+
     this.changeStatusConsolidacionForm.patchValue(currentvalues);
 
   }

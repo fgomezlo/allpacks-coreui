@@ -141,6 +141,28 @@ export class ConsolidacionService {
       options).toPromise();
   }
 
+  changestatusreempacado(id:string, warehouse:string) {
+    const options = {
+      headers : new HttpHeaders({
+        'Content-Type' : 'application/json',
+        'access-token' : this.accesstoken
+      }),
+      responseType: 'json' as const
+    };
+
+    let body = {
+        "function" : "changestatusconsolidacion",
+        "id" : id,
+        "status" : "5", // reempacado code in db
+        "whreempaque" : warehouse
+    };
+
+    console.log(body);
+    return this.http.post(this.url, 
+      body, 
+      options).toPromise();
+  }
+
   savetracking(id:string , paquetes: any) {
     const options = {
       headers : new HttpHeaders({

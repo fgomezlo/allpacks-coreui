@@ -55,7 +55,7 @@
                 <c-row>
                   <c-col md="12" xs="12" class="d-flex justify-content-center">
                     
-                    <re-captcha (resolved)="recaptchaSignin($event)" ></re-captcha>
+                    <re-captcha #reCaptcha (resolved)="recaptchaSignin($event)" ></re-captcha>
                     <!-- div *ngIf="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)" class="invalid-feedback">
                       <div *ngIf="recaptcha.errors?.['required']">This field is required.</div>
                     </div -->
@@ -142,7 +142,7 @@
         <c-row>
           <c-col md="12" xs="12" class="d-flex justify-content-center">
             
-            <re-captcha (resolved)="recaptchaForgot($event)" ></re-captcha>
+            <re-captcha #reCaptchaForgot (resolved)="recaptchaForgot($event)" ></re-captcha>
             <!-- div *ngIf="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)" class="invalid-feedback">
               <div *ngIf="recaptcha.errors?.['required']">This field is required.</div>
             </div -->

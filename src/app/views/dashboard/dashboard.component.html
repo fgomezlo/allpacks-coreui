@@ -46,4 +46,13 @@
         Parametros
       </a>
   </c-col>
+  <c-col md="4" class="d-grid" *ngIf="isAvailable(['Administrador','Usuario'])">
+      <a class="m-1"
+      cButton 
+      color="dark" 
+      [routerLink]="['/estimacion']" >
+        <svg cIcon class="me-2" name="cilCalculator"></svg>
+        Calcula Tu Carga
+      </a>
+  </c-col>
 </c-row>

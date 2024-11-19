@@ -11,10 +11,10 @@
             <c-col [md]="12"  >
                 <c-input-group class="mb-3">
                 <input aria-describedby="search"
-                       aria-label="<ultimos 5 numeros codigo consolidacion> | <codigo cliente> "
+                       aria-label="<ultimos 5 numeros codigo consolidacion> | <codigo cliente> | <warehouse final>"
                        cFormControl
                        formControlName="filtervalue" 
-                       placeholder="<codigocliente> | <numero consolidacion> "
+                       placeholder="<codigocliente> | <numero consolidacion> | <warehouse final>"
                        (keydown.enter)="searchFilter()"
                 />
                 <button cButton 
@@ -139,6 +139,7 @@
                 <th scope="col">Fecha modificación</th>
                 <th scope="col">Usuario</th>
                 <th scope="col">Estatus</th>
+                <th scope="col">Wh Final</th>
                 <th scope="col">Acciones</th>
                 </tr>
             </thead>
@@ -159,6 +160,9 @@
                 <td> {{item.usuario?.name}}  </td>
                 <td>
                     {{ comboDes(item.status, listcombos.estado) }}
+                </td>
+                <td>
+                    {{ item.whreempaque }}
                 </td>
                 <td class="text-nowrap">
                     <button
@@ -234,6 +238,17 @@
                   </select>
             </c-col>
         </c-row>
+        <c-row class="mt-2" *ngIf="+currentconsolidacion.status >= 5">
+            <c-col [sm]="3" >
+                Warehouse Final :
+            </c-col>
+            <c-col [sm]="9" class="fw-bold">
+                <input
+                    formControlName="whreempaque"
+                    cFormControl
+                />
+            </c-col>
+        </c-row>
         <c-row class="mt-2">
             <c-col [sm]="12">
                 <p>Paquetes registrados en {{params["title"]}}</p>
@@ -247,6 +262,7 @@
                         <th scope="col">Tracking</th>
                         <th scope="col">Descripción</th>
                         <th scope="col">Warehouse</th>
+                        <th scope="col">Factura</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -258,6 +274,10 @@
                         <td>{{ item.tracking }}</td>
                         <td>{{ item.descripcion }}</td>
                         <td>{{ item.warehouse }}</td>
+                        <td>
+                            <a *ngIf="item.urlfactura != null" [href]="item.urlfactura" target="_blank" >Fact {{i + 1}}</a>
+                            <p *ngIf="item.urlfactura == null">ND</p>
+                        </td>
                         </tr>
                     </tbody>
                 </table>
