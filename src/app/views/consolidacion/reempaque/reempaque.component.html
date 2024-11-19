@@ -15,6 +15,7 @@
                        cFormControl
                        formControlName="filtervalue" 
                        placeholder="<tracking> | <codigo cliente>"
+                       (keydown.enter)="searchFilter()"
                 />
                 <button cButton 
                     color="secondary" 
@@ -89,10 +90,20 @@
                             <button  cButton color="warning" class="ml-1" >
                                 <svg cIcon name="cilPrint"></svg>
                             </button>
-                            <button *ngIf="!showCompleteButton(consolidacion.items)" cButton color="danger" class="ml-1" >
+                            <button 
+                            *ngIf="!showCompleteButton(consolidacion.items)" 
+                            cButton 
+                            color="danger" 
+                            class="ml-1" 
+                            (click)="deleteConsolidacion(consolidacion)"
+                            >
                                 <svg cIcon name="cilDelete"></svg>
                             </button>
-                            <button *ngIf="showCompleteButton(consolidacion.items)" cButton color="success" class="ml-1" >
+                            <button 
+                            *ngIf="showCompleteButton(consolidacion.items)" 
+                            cButton color="success" 
+                            class="ml-1" 
+                            (click)="completeConsolidacion(consolidacion)">
                                 <svg cIcon name="cilCheck"></svg>
                             </button>
                         </td>

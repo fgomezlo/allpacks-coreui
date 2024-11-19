@@ -14,7 +14,8 @@
                        aria-label="<ultimos 5 numeros codigo consolidacion> | <codigo cliente> "
                        cFormControl
                        formControlName="filtervalue" 
-                       placeholder="<codigocliente> | <codigo cliente> "
+                       placeholder="<codigocliente> | <numero consolidacion> "
+                       (keydown.enter)="searchFilter()"
                 />
                 <button cButton 
                     color="secondary" 

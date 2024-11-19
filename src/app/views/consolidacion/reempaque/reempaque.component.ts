@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BadgeModule, ButtonModule, ColComponent, ContainerComponent, FormModule, ModalModule, PaginationModule, RowComponent, TabDirective, TableModule, TabPanelComponent, TabsComponent, TabsContentComponent, TabsListComponent } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
-import _, { forEach } from 'lodash';
+import _ from 'lodash';
 import { CustomPaginationComponent } from 'src/app/components/custom-pagination/custom-pagination.component';
 import { ConsolidacionService } from 'src/app/services/consolidacion.service';
 import Swal from 'sweetalert2';
@@ -258,5 +258,76 @@ export class ReempaqueComponent implements OnInit {
     return "table-" + obj['color'];
   }
 
-  
+  deleteConsolidacion(consolidacion: any) {
+    
+   Swal.fire(
+    {
+      icon: "warning",
+      title: `Deseas eliminar el reempaque '${consolidacion.codigo}' ? `,
+      showCancelButton: true,
+      confirmButtonText: "Sí",
+      cancelButtonText: "No"
+    }
+   ).then(res =>{
+    
+      if (res.isConfirmed) {
+        return this.consolidacionService.delete(consolidacion.id);
+      }
+
+      return Promise.reject(null);
+    
+   }).then((response : any)=>{
+
+    this.searchFilter();
+
+    let title = response.code != "success" ? "UPS !!!" : "Transacción Exitosa"
+    Swal.fire(title, response.message, response.code);
+
+   }).catch(error => {
+
+    if(!error) return;
+
+    Swal.fire("Ups !!!", "Hubo un problema con el servidor intente nuevamente", 'error');
+
+   })
+
+  }
+
+  completeConsolidacion(consolidacion: any) {
+    
+    Swal.fire(
+     {
+       icon: "warning",
+       title: `Deseas cambiar a 'COMPLETADO' el reempaque '${consolidacion.codigo}' ? `,
+       showCancelButton: true,
+       confirmButtonText: "Sí",
+       cancelButtonText: "No"
+     }
+    ).then(res =>{
+     
+       if (res.isConfirmed) {
+        
+         return this.consolidacionService.changestatus(
+          consolidacion.id, "3"); // defaultcode for completado
+        
+       }
+ 
+       return Promise.reject(null);
+     
+    }).then((response : any)=>{
+ 
+     this.searchFilter();
+ 
+     let title = response.code != "success" ? "UPS !!!" : "Transacción Exitosa"
+     Swal.fire(title, response.message, response.code);
+ 
+    }).catch(error => {
+ 
+     if(!error) return;
+ 
+     Swal.fire("Ups !!!", "Hubo un problema con el servidor intente nuevamente", 'error');
+ 
+    })
+ 
+   }
 }
