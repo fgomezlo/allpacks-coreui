@@ -307,35 +307,30 @@
                   <svg cIcon name="cilLockLocked"></svg>
                   clave
                 </span>
-                
                 <input 
+                type="password"
                 formControlName="password" 
                 cFormControl 
-                placeholder="" 
+                autocomplete="new-password"
                 [valid]="password.touched && password.valid ? true : 
                 password.touched && password.invalid ? false : undefined"
                 />
-                <c-form-feedback *ngIf="password.invalid" [valid]="!password.invalid">
-                    <ng-container *ngIf="password.errors as errors">
-                    <p *ngIf="errors['required']">El campo no puede estar en blanco</p>
-                    </ng-container>
-                </c-form-feedback>
-
                 <input 
+                type="password"
                 formControlName="passwordconfirmed" 
                 cFormControl 
-                placeholder="" 
+                autocomplete="new-password"
                 [valid]="passwordconfirmed.touched && passwordconfirmed.valid ? true : 
                 passwordconfirmed.touched && passwordconfirmed.invalid ? false : undefined"
                 />
-
-                <c-form-feedback *ngIf="passwordconfirmed.invalid" [valid]="!passwordconfirmed.invalid">
-                    <ng-container *ngIf="passwordconfirmed.errors as errors">
-                    <p *ngIf="errors['required']">El campo no puede estar en blanco</p>
-                    <p *ngIf="errors['matchpass']">las claves no coinciden</p>
-                    </ng-container>
-                </c-form-feedback>
+              <c-form-feedback *ngIf="passwordconfirmed.invalid" [valid]="!passwordconfirmed.invalid">
+                <ng-container *ngIf="passwordconfirmed.errors as errors">
+                <p *ngIf="errors['required']">El campo no puede estar en blanco</p>
+                <p *ngIf="errors['matchpass']">las claves no coinciden</p>
+                </ng-container>
+            </c-form-feedback>
               </c-input-group>
+              
           </c-tab-panel>
         </c-tabs-content>
       </c-tabs>
@@ -349,7 +344,7 @@
         Cerrar
       </button>
       <button cButton 
-      
+      [disabled]="!customerForm.valid"
       color="primary" (click)="savecustomer()">
         <svg cIcon class="me-2" name="cilSave"></svg>
         Guardar

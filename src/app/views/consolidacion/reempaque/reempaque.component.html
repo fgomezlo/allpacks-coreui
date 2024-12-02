@@ -61,7 +61,7 @@
                 <c-container *ngFor="let consolidacion of data.items; index as i" 
                 [class]="getColorByEstadoId(consolidacion.status, listcombos.estatuscolor)" 
                 class="displaycontents">
-                    <tr >
+                    <tr  >
                         <th scope="col" [rowSpan]="consolidacion.items.length">
                             {{ consolidacion.codigo }}
                         </th>
@@ -71,9 +71,9 @@
                         </td>
                         <td>1</td>
                         <td>{{ consolidacion.items[0].carrier }}</td>
-                        <td>{{ consolidacion.items[0].tracking }}</td>
-                        <td>{{ consolidacion.items[0].warehouse }}</td>
-                        <td><a [href]="consolidacion.items[0].urlfactura" target="_blank" >Fact 1</a></td>
+                        <td style="border-right: 1px black solid;" >{{ consolidacion.items[0].tracking }}</td>
+                        <td style="border-right: 1px black solid;" >{{ consolidacion.items[0].warehouse }}</td>
+                        <td style="border-right: 1px black solid;"><a [href]="consolidacion.items[0].urlfactura" target="_blank" >Fact 1</a></td>
                         <td [rowSpan]="consolidacion.items.length">
                             {{ consolidacion.datecreated }}
                         </td>
@@ -108,12 +108,13 @@
                             </button>
                         </td>
                     </tr>
-                    <tr *ngFor="let moreitems of consolidacion.items | slice:1; index as j" [class]="getColorByEstadoId(consolidacion.status, listcombos.estatuscolor)">
+                    <tr 
+                    *ngFor="let moreitems of consolidacion.items | slice:1; index as j" [class]="getColorByEstadoId(consolidacion.status, listcombos.estatuscolor)">
                         <td>{{j + 2}}</td>
                         <td>{{ consolidacion.items[j+1].carrier }}</td>
-                        <td>{{ consolidacion.items[j+1].tracking }}</td>
-                        <td>{{ consolidacion.items[j+1].warehouse }}</td>
-                        <td><a [href]="consolidacion.items[j+1].urlfactura" target="_blank" >Fact {{j + 2}}</a></td>
+                        <td style="border-right: 1px black solid;">{{ consolidacion.items[j+1].tracking }}</td>
+                        <td style="border-right: 1px black solid;" >{{ consolidacion.items[j+1].warehouse }}</td>
+                        <td style="border-right: 1px black solid;"><a [href]="consolidacion.items[j+1].urlfactura" target="_blank" >Fact {{j + 2}}</a></td>
                     </tr>
                 </c-container>
                     

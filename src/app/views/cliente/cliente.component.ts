@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { BadgeModule, ButtonModule, ColComponent, FormModule, ModalModule, PaginationModule, RowComponent, TabDirective, TableModule, TabPanelComponent, TabsComponent, TabsContentComponent, TabsListComponent } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import { CustomPaginationComponent } from 'src/app/components/custom-pagination/custom-pagination.component';
+import { ClienteValidators } from './cliente.validators';
 
 @Component({
   selector: 'app-cliente',
@@ -114,6 +115,8 @@ export class ClienteComponent implements OnInit {
       codigo: [''],
       password: [''],
       passwordconfirmed: ['']
+    },{
+      validators : [ClienteValidators.matchPasswords]
     });
 
     // load combo pais list

@@ -183,22 +183,19 @@
                 </span>
                 
                 <input 
+                type="password"
                 formControlName="password" 
                 cFormControl 
-                placeholder="" 
+                autocomplete="new-password" 
                 [valid]="password.touched && password.valid ? true : 
                 password.touched && password.invalid ? false : undefined"
                 />
-                <c-form-feedback *ngIf="password.invalid" [valid]="!password.invalid">
-                    <ng-container *ngIf="password.errors as errors">
-                    <p *ngIf="errors['required']">El campo no puede estar en blanco</p>
-                    </ng-container>
-                </c-form-feedback>
 
                 <input 
+                type="password"
                 formControlName="passwordconfirmed" 
                 cFormControl 
-                placeholder="" 
+                autocomplete="new-password"
                 [valid]="passwordconfirmed.touched && passwordconfirmed.valid ? true : 
                 passwordconfirmed.touched && passwordconfirmed.invalid ? false : undefined"
                 />
@@ -207,6 +204,28 @@
                     <ng-container *ngIf="passwordconfirmed.errors as errors">
                     <p *ngIf="errors['required']">El campo no puede estar en blanco</p>
                     <p *ngIf="errors['matchpass']">las claves no coinciden</p>
+                    </ng-container>
+                </c-form-feedback>
+              </c-input-group>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilLoopCircular"></svg>
+                  Estatus
+                </span>
+                <select cSelect 
+                formControlName="status"
+                [valid]="status.touched && status.valid ? true : 
+                status.touched && status.invalid ? false : undefined"
+                >
+                  <option>Selecciona Estatus</option>
+                  <option [value]="1">Activo</option>
+                  <option [value]="0">Inactivo</option>
+                </select>
+
+                <c-form-feedback *ngIf="status.invalid" [valid]="!status.invalid">
+                    <ng-container *ngIf="status.errors as errors">
+                    <p *ngIf="errors['required']">El campo no puede estar en blanco</p>
                     </ng-container>
                 </c-form-feedback>
               </c-input-group>
@@ -240,7 +259,7 @@
         Cerrar
       </button>
       <button cButton 
-      
+      [disabled]="!userForm.valid"
       color="primary" (click)="saveuser()">
         <svg cIcon class="me-2" name="cilSave"></svg>
         Guardar

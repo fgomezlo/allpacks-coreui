@@ -33,6 +33,7 @@ import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha-2';
 import { CustomPaginationComponent } from 'src/app/components/custom-pagination/custom-pagination.component';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
+import { UsuarioValidators } from './usuario.validators'
 
 @Component({
   selector: 'app-usuario',
@@ -127,6 +128,8 @@ export class UsuarioComponent implements OnInit {
       password: [''],
       passwordconfirmed: [''],
       roles: this.formBuilder.array([]),
+    }, {
+      validators : UsuarioValidators.matchPasswords
     });
 
     // load rol list
@@ -149,6 +152,7 @@ export class UsuarioComponent implements OnInit {
 
   openModal(user: any) {
     this.visible = !this.visible;
+
     this.updateuser = user;
     let userformvalue = user;
     
@@ -235,6 +239,7 @@ export class UsuarioComponent implements OnInit {
     .then((res:any)=>{
       Swal.fire("Solicitud Procesada", res.message, res.estatus)
       .then(()=>{
+        this.handleModalChange(false);
         this.searchFilter();
       });
     })

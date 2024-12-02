@@ -154,7 +154,7 @@
                 <td>{{ comboDes(item.tiposervicio, listcombos.tiposervicio) }}</td>
                 <td> {{item.cliente.codigo}} </td>
                 <td>{{ item.nota }}</td>
-                <td>{{ item.items.length }}</td>
+                <td>{{ item.items != null ? item.items.length : '0' }}</td>
                 <td> {{item.datecreated}} </td>
                 <td> {{item.dateupdated}} </td>
                 <td> {{item.usuario?.name}}  </td>
