@@ -130,7 +130,10 @@
  size="xl"
  >
     <c-modal-header>
-      <h5 cModalTitle>Información de reempaque o consolidación</h5>
+      <h5 cModalTitle>
+        Información de 
+        {{currentconsolidacion && currentconsolidacion.items.length != 1 ? 'reempaque o consolidación' : 'PRE-ALERTA' }}
+    </h5>
       <button [cModalToggle]="consolidacionModal.id" cButtonClose></button>
     </c-modal-header>
     <c-modal-body>
@@ -142,7 +145,7 @@
       <c-container *ngIf="currentconsolidacion" >
         <c-row>
             <c-col [sm]="2"  >
-                Nro Reempaque:
+                Nro {{currentconsolidacion.items.length != 1 ? 'reempaque' : 'PRE-ALERTA' }}:
             </c-col>
             <c-col [sm]="4" class="fw-bold" >
                 {{currentconsolidacion.codigo}}
@@ -198,7 +201,9 @@
         </c-row>
         <c-row class="mt-2">
             <c-col [sm]="12">
-                <p>Paquetes registrados en la consolidación o reempaque</p>
+                <p>Paquetes registrados en la 
+                    {{currentconsolidacion.items.length != 1 ? 'consolidación o reempaque' : 'PRE-ALERTA' }}
+                </p>
                 <table  
                 cTable [hover]="true" 
                 class="text-center mt-2">

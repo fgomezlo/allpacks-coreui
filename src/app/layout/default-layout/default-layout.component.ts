@@ -4,8 +4,11 @@ import { NgScrollbar } from 'ngx-scrollbar';
 
 import { IconDirective } from '@coreui/icons-angular';
 import {
+  ButtonModule,
   ContainerComponent,
+  FormModule,
   INavData,
+  ModalModule,
   ShadowOnScrollDirective,
   SidebarBrandComponent,
   SidebarComponent,
@@ -20,6 +23,12 @@ import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
 import * as _ from 'lodash-es';
 import { AuthService } from 'src/app/services/auth.service';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ProfileValidators } from './profile.validators';
+import Swal from 'sweetalert2';
+import { UserService } from 'src/app/services/user.service';
+
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -48,12 +57,21 @@ function isOverflown(element: HTMLElement) {
     ShadowOnScrollDirective,
     ContainerComponent,
     RouterOutlet,
-    DefaultFooterComponent
+    DefaultFooterComponent,
+    ReactiveFormsModule,
+    CommonModule,
+    ModalModule,
+    FormModule,
+    ButtonModule
   ]
 })
 export class DefaultLayoutComponent implements OnInit {
   
-  constructor(private authService : AuthService) {}
+  constructor(
+    private authService : AuthService,
+    private formBuilder : FormBuilder,
+    private userService : UserService
+  ) {}
 
   ngOnInit(): void {
     
@@ -63,14 +81,15 @@ export class DefaultLayoutComponent implements OnInit {
 
     this.navItems = navItems;//permititems;
     */
-    let currentuser = this.authService.currentUser;
-    if(_.isUndefined(currentuser.roles) || _.isEmpty(currentuser.roles)) {
+    this.currentuser = this.authService.currentUser;
+    if(_.isUndefined(this.currentuser.roles) || _.isEmpty(this.currentuser.roles)) {
       this.navItems = [];
       return;
     }
     
-    this.checkAllowMenu(currentuser.roles);
-    
+    this.checkAllowMenu(this.currentuser.roles);
+    this.loadFormUser();
+
   }
 
   checkAllowMenu(roles : []) {
@@ -112,4 +131,74 @@ export class DefaultLayoutComponent implements OnInit {
     // console.log('verticalUsed', $event.verticalUsed);
     // }
   }
+
+  // modal profile user
+  loadFormUser() {
+
+    this.userProfileForm = this.formBuilder.group(
+      {
+        name: ['', [Validators.required]],
+        email: [''],
+        dni: [''],
+        password: [''],
+        passwordconfirmed: [''],
+      },
+      {
+        validators: [ProfileValidators.matchPasswords],
+      }
+    );
+
+    // load currentuser information
+    this.userProfileForm.patchValue(this.currentuser);
+  }
+
+  userProfileForm!: FormGroup;
+  currentuser!: any;
+  public visible: any = false;
+
+  get name() {
+    return this.userProfileForm.controls['name'];
+  }
+  get password() {
+    return this.userProfileForm.controls['password'];
+  }
+  get passwordconfirmed() {
+    return this.userProfileForm.controls['passwordconfirmed'];
+  }
+
+  handleProfileModalChange(event: any) {
+    this.visible = event;
+  }
+
+  updateProfileUser() {
+    //console.log('update profile', this.userProfileForm.valid, this.userProfileForm.value);
+
+    if(!this.userProfileForm.valid) {
+      console.error("form is invalid", this.userProfileForm.errors);
+      return ;
+    }
+
+    this.userService
+    .updateDataProfile(this.userProfileForm.value)
+    .then((res : any)=>{
+      return Swal.fire('Resultado de la transacción',res.message,res.code);
+    })
+    .then((resSwal)=>{
+      // close modal
+      this.handleProfileModalChange(false);
+    })
+    .catch((e)=>{
+      Swal.fire('UPS !!!',e.message,"error");
+    });
+
+  }
+
+  openProfileModal(event : any) {
+    this.visible = !this.visible;
+    if(this.visible) {
+      this.userProfileForm.reset();
+      this.userProfileForm.patchValue(this.currentuser);
+    }
+  }
+  
 }

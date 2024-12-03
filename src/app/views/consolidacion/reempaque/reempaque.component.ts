@@ -180,7 +180,7 @@ export class ReempaqueComponent implements OnInit {
 
   openModal(consolidacion: any) {
     
-    this.visible = !this.visible;
+    
 
     this.currentconsolidacion = consolidacion;
     this.paquetes.clear();
@@ -201,6 +201,8 @@ export class ReempaqueComponent implements OnInit {
         checked : false
       })
     });
+
+    this.visible = !this.visible;
 
   }
 
