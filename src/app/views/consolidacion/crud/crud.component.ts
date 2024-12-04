@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, NgModule, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { BadgeModule, ButtonModule, ColComponent, ContainerComponent, FormModule, GutterDirective, ModalModule, PaginationModule, RowComponent, TabDirective, TableModule, TabPanelComponent, TabsComponent, TabsContentComponent, TabsListComponent } from '@coreui/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BadgeModule, ButtonModule, ColComponent, ContainerComponent, FormModule, ModalModule, PaginationModule, RowComponent, TableModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import {ConsolidacionService} from '../../../services/consolidacion.service';
 import Swal from 'sweetalert2';
 import _ from 'lodash';
-import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepicker, NgbDatepickerModule, NgbDateStruct, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import {CustomPaginationComponent} from '../../../components/custom-pagination/custom-pagination.component'; 
-
+import {PrintConsolidacionListComponent} from '../../../components/print-consolidacion-list/print-consolidacion-list.component';
 @Component({
   selector: 'app-crud',
   standalone: true,
@@ -23,18 +23,12 @@ import {CustomPaginationComponent} from '../../../components/custom-pagination/c
     BadgeModule,
     PaginationModule,
     ModalModule,
-    TabsComponent,
-    TabPanelComponent,
-    TabsContentComponent,
-    TabsListComponent,
-    TabDirective,
     IconModule,
     ButtonModule,
-    RouterLink,
     NgbInputDatepicker,
-    GutterDirective,
     CustomPaginationComponent,
-    ContainerComponent
+    ContainerComponent,
+    PrintConsolidacionListComponent
   ],
   templateUrl: './crud.component.html',
   styleUrl: './crud.component.scss'
@@ -66,6 +60,8 @@ export class CrudComponent implements OnInit {
 
   //datepicker filter
   model : NgbDateStruct | null = null;
+  // print boxes data
+  listPrint : any[any] = [];
 
   constructor(
     private router: ActivatedRoute,
@@ -351,5 +347,35 @@ export class CrudComponent implements OnInit {
 		const parsed = this.formatter.parse(input);
 		return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : null;
 	}
+
+  // select all items to print in page
+  selectallPrintBox(){
+    if(_.isEmpty(this.listPrint)) {
+      this.listPrint = this.data.items;
+      return;
+    }
+
+    this.listPrint = [];
+    return;
+  }
+
+  checkedItemPrint(item : any){
+    return _.findIndex(this.listPrint, item) >= 0;
+  }
+
+  // print consolidacion items
+  addItemPrint(event: any, item: any) {
+    //console.log(event.target.checked);
+    if(event.target.checked) {
+      this.listPrint.push(item);
+    } else {
+      // remove item from list
+      this.listPrint = _.pull(this.listPrint, item);
+    }
+  }
+
+  printPage() {
+    window.print();
+  }
 
 }

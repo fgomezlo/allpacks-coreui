@@ -1,5 +1,19 @@
+<app-print-consolidacion-list
+    [data]="listPrint"
+    [listcombos]="listcombos"
+>
+</app-print-consolidacion-list>
+
+<div class="noprint-component">
 <h1 class="text-primary text-left">
     Gestión de {{ params.title }}
+    <button
+     color="warning"
+     cButton 
+     (click)="printPage()"
+     *ngIf="listPrint.length > 0">
+        Imprimir Seleccionados
+    </button>
 </h1>
 <c-row [xs]="12">
     <c-col [md]="9">
@@ -129,7 +143,13 @@
         <table [striped]="true" cTable [hover]="true" class="text-center">
             <thead>
                 <tr>
-                <th scope="col">Imprimir</th>
+                <th scope="col">
+                    <a cButton 
+                    color="link"
+                    (click)="selectallPrintBox()">
+                        Imprimir
+                    </a>
+                </th>
                 <th scope="col">No Consolidacion</th>
                 <th scope="col">Tipo de Servicio</th>
                 <th scope="col">Código cliente</th>
@@ -147,7 +167,14 @@
                 <tr *ngFor="let item of data.items; index as i" [class]="getColorByEstadoId(item.status, listcombos.estatuscolor)">
                 <th scope="col">
                     <c-form-check class="pt-2">
-                        <input type="checkbox" cFormCheckInput [value]="item.id" class="itemprint" />
+                        <input 
+                        type="checkbox" 
+                        cFormCheckInput 
+                        [value]="item.id"
+                        [checked]="checkedItemPrint(item)" 
+                        class="itemprint"
+                        (change)="addItemPrint($event, item)"
+                         />
                     </c-form-check>
                 </th>
                 <td>{{ item.codigo }}</td>
@@ -185,7 +212,6 @@
         </table>
     </c-col>
 </c-row>
-
 <c-modal #consolidacionModalEstatus
  id="consolidacionModalEstatus" 
  alignment="center"
@@ -331,3 +357,4 @@
       </button>
     </c-modal-footer>
   </c-modal>
+</div>

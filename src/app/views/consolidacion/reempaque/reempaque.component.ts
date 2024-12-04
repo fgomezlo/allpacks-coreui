@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BadgeModule, ButtonModule, ColComponent, ContainerComponent, FormModule, ModalModule, PaginationModule, RowComponent, TabDirective, TableModule, TabPanelComponent, TabsComponent, TabsContentComponent, TabsListComponent } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import _ from 'lodash';
 import { CustomPaginationComponent } from 'src/app/components/custom-pagination/custom-pagination.component';
+import { PrintConsolidacionTrackingComponent } from 'src/app/components/print-consolidacion-tracking/print-consolidacion-tracking.component';
 import { ConsolidacionService } from 'src/app/services/consolidacion.service';
 import Swal from 'sweetalert2';
 
@@ -20,16 +21,12 @@ import Swal from 'sweetalert2';
     TableModule,
     BadgeModule,
     ModalModule,
-    TabsComponent,
-    TabPanelComponent,
-    TabsContentComponent,
-    TabsListComponent,
-    TabDirective,
     IconModule,
     ButtonModule,
-    RouterLink,
     CustomPaginationComponent,
-    ContainerComponent],
+    ContainerComponent,
+    PrintConsolidacionTrackingComponent
+  ],
   templateUrl: './reempaque.component.html',
   styleUrl: './reempaque.component.scss'
 })
@@ -56,12 +53,14 @@ export class ReempaqueComponent implements OnInit {
       {id : "6", color: 'info'}
     ]
   }
+  // print boxes data
+  listPrint : any[any] = [];
 
   constructor(
     private router: ActivatedRoute,
     private formBuilder: FormBuilder,
     private consolidacionService: ConsolidacionService,
-    private route: Router
+    private cdRef:ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -180,8 +179,6 @@ export class ReempaqueComponent implements OnInit {
 
   openModal(consolidacion: any) {
     
-    
-
     this.currentconsolidacion = consolidacion;
     this.paquetes.clear();
     this.totalizar = [];
@@ -338,4 +335,11 @@ export class ReempaqueComponent implements OnInit {
          });
     }
    }
+
+  printConsolidacion(item:any) {
+    this.listPrint = [];
+    this.listPrint.push(item);
+    this.cdRef.detectChanges();
+    window.print();
+  }
 }

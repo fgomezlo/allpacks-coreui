@@ -100,7 +100,8 @@ import {
   cilSearch,
   cilDelete,
   cilPlus,
-  cilLoopCircular
+  cilLoopCircular,
+  cilSquare
 } from '@coreui/icons';
 
 import { signet } from './signet';
@@ -210,7 +211,8 @@ export const iconSubset = {
   cilSearch,
   cilDelete,
   cilPlus,
-  cilLoopCircular
+  cilLoopCircular,
+  cilSquare
 };
 
 export enum IconSubset {
@@ -317,6 +319,7 @@ export enum IconSubset {
   cilSearch = 'cilSearch',
   cilDelete = 'cilDelete',
   cilPlus = 'cilPlus',
-  cilLoopCircular='cilLoopCircular'
+  cilLoopCircular='cilLoopCircular',
+  cilSquare='cilSquare'
 }
 

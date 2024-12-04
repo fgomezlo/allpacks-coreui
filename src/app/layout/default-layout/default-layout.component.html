@@ -1,170 +1,206 @@
-<!--sidebar-->
-<c-sidebar
-  #sidebar1="cSidebar"
-  class="d-print-none sidebar sidebar-fixed border-end"
-  colorScheme="dark"
-  id="sidebar1"
-  visible
->
-  <c-sidebar-header class="border-bottom bg-white" >
-    <c-sidebar-brand [routerLink]="[]" class="" >
-      <!-- svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" name="logo" title="Allpacks FC logo"></svg -->
-      <!-- svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="CoreUI Logo"></svg -->
-       <img [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" src="assets/images/logo_allpacks.png" name="logo">
-       <img cIcon class="sidebar-brand-narrow" height="32" src="assets/images/logo_allpacks.png" name="signet" >
-    </c-sidebar-brand>
-  </c-sidebar-header>
+<div class="main-app">
+  <!--sidebar-->
+  <c-sidebar
+    #sidebar1="cSidebar"
+    class="d-print-none sidebar sidebar-fixed border-end"
+    colorScheme="dark"
+    id="sidebar1"
+    visible
+  >
+    <c-sidebar-header class="border-bottom bg-white">
+      <c-sidebar-brand [routerLink]="[]" class="">
+        <!-- svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" name="logo" title="Allpacks FC logo"></svg -->
+        <!-- svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="CoreUI Logo"></svg -->
+        <img
+          [class]="{ icon: false }"
+          cIcon
+          class="sidebar-brand-full"
+          height="32"
+          src="assets/images/logo_allpacks.png"
+          name="logo"
+        />
+        <img
+          cIcon
+          class="sidebar-brand-narrow"
+          height="32"
+          src="assets/images/logo_allpacks.png"
+          name="signet"
+        />
+      </c-sidebar-brand>
+    </c-sidebar-header>
 
-  <ng-scrollbar #scrollbar="ngScrollbar" (updated)="onScrollbarUpdate(scrollbar.state)" class="overflow" pointerEventsMethod="scrollbar" visibility="hover">
-    <c-sidebar-nav #overflow [navItems]="navItems" dropdownMode="close" compact />
-  </ng-scrollbar>
-  @if (!sidebar1.narrow) {
-    <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
+    <ng-scrollbar
+      #scrollbar="ngScrollbar"
+      (updated)="onScrollbarUpdate(scrollbar.state)"
+      class="overflow"
+      pointerEventsMethod="scrollbar"
+      visibility="hover"
+    >
+      <c-sidebar-nav
+        #overflow
+        [navItems]="navItems"
+        dropdownMode="close"
+        compact
+      />
+    </ng-scrollbar>
+    @if (!sidebar1.narrow) {
+    <c-sidebar-footer
+      cSidebarToggle="sidebar1"
+      class="border-top d-none d-lg-flex"
+      toggle="unfoldable"
+      style="cursor: pointer"
+    >
       <button cSidebarToggler aria-label="Toggle sidebar fold"></button>
     </c-sidebar-footer>
-  }
-</c-sidebar>
+    }
+  </c-sidebar>
 
-<!--main-->
-<div class="wrapper d-flex flex-column min-vh-100">
-  <!--app-header-->
-  <app-default-header
-    [cShadowOnScroll]="'sm'"
-    class="mb-4 d-print-none header header-sticky p-0 shadow-sm"
-    position="sticky"
-    sidebarId="sidebar1"
-    (openUserModal)="openProfileModal($event)"
-  />
-  <!--app-body-->
-  <div class="body flex-grow-1">
-    <c-container breakpoint="lg" class="h-auto px-4">
-      <router-outlet />
-    </c-container>
+  <!--main-->
+  <div class="wrapper d-flex flex-column min-vh-100">
+    <!--app-header-->
+    <app-default-header
+      [cShadowOnScroll]="'sm'"
+      class="mb-4 d-print-none header header-sticky p-0 shadow-sm"
+      position="sticky"
+      sidebarId="sidebar1"
+      (openUserModal)="openProfileModal($event)"
+    />
+    <!--app-body-->
+    <div class="body flex-grow-1">
+      <c-container breakpoint="lg" class="h-auto px-4">
+        <router-outlet />
+      </c-container>
+    </div>
+    <!--app footer-->
+    <app-default-footer />
   </div>
-  <!--app footer-->
-  <app-default-footer />
 </div>
 
-<c-modal
-  #userProfileModal
-  id="userProfileModal"
-  [visible]="visible"
-  (visibleChange)="handleProfileModalChange($event)"
-  size="sm"
->
-  <c-modal-header>
-    <h5 cModalTitle>Datos del usuario</h5>
-    <button [cModalToggle]="userProfileModal.id" cButtonClose></button>
-  </c-modal-header>
-  <c-modal-body>
-    <!-- ng-container *ngTemplateOutlet="longContent"></ng-container -->
-    <form cForm [formGroup]="userProfileForm" novalidate>
-      <c-input-group class="mb-3">
-        <span cInputGroupText>
-          <svg cIcon name="cilUser"></svg>
-        </span>
+  <c-modal
+    #userProfileModal
+    id="userProfileModal"
+    [visible]="visible"
+    (visibleChange)="handleProfileModalChange($event)"
+    size="sm"
+  >
+    <c-modal-header>
+      <h5 cModalTitle>Datos del usuario</h5>
+      <button [cModalToggle]="userProfileModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      <!-- ng-container *ngTemplateOutlet="longContent"></ng-container -->
+      <form cForm [formGroup]="userProfileForm" novalidate>
+        <c-input-group class="mb-3">
+          <span cInputGroupText>
+            <svg cIcon name="cilUser"></svg>
+          </span>
 
-        <input
-          formControlName="name"
-          cFormControl
-          placeholder="Nombre"
-          [valid]="
-            name.touched && name.valid
-              ? true
-              : name.touched && name.invalid
-              ? false
-              : undefined
-          "
-        />
-        <c-form-feedback *ngIf="name.invalid" [valid]="!name.invalid">
-          <ng-container *ngIf="name.errors as errors">
-            <p *ngIf="errors['required']">El nombre no puede estar vacío</p>
-          </ng-container>
-        </c-form-feedback>
-      </c-input-group>
+          <input
+            formControlName="name"
+            cFormControl
+            placeholder="Nombre"
+            [valid]="
+              name.touched && name.valid
+                ? true
+                : name.touched && name.invalid
+                ? false
+                : undefined
+            "
+          />
+          <c-form-feedback *ngIf="name.invalid" [valid]="!name.invalid">
+            <ng-container *ngIf="name.errors as errors">
+              <p *ngIf="errors['required']">El nombre no puede estar vacío</p>
+            </ng-container>
+          </c-form-feedback>
+        </c-input-group>
 
-      <c-input-group class="mb-3">
-        <span cInputGroupText>
-          <svg cIcon name="cilLockLocked"></svg>
-          clave
-        </span>
+        <c-input-group class="mb-3">
+          <span cInputGroupText>
+            <svg cIcon name="cilLockLocked"></svg>
+            clave
+          </span>
 
-        <input
-          type="password"
-          formControlName="password"
-          cFormControl
-          autocomplete="new-password"
-          [valid]="
-            password.touched && password.valid
-              ? true
-              : password.touched && password.invalid
-              ? false
-              : undefined
-          "
-        />
+          <input
+            type="password"
+            formControlName="password"
+            cFormControl
+            autocomplete="new-password"
+            [valid]="
+              password.touched && password.valid
+                ? true
+                : password.touched && password.invalid
+                ? false
+                : undefined
+            "
+          />
 
-        <input
-          type="password"
-          formControlName="passwordconfirmed"
-          cFormControl
-          autocomplete="new-password"
-          [valid]="
-            passwordconfirmed.touched && passwordconfirmed.valid
-              ? true
-              : passwordconfirmed.touched && passwordconfirmed.invalid
-              ? false
-              : undefined
-          "
-        />
+          <input
+            type="password"
+            formControlName="passwordconfirmed"
+            cFormControl
+            autocomplete="new-password"
+            [valid]="
+              passwordconfirmed.touched && passwordconfirmed.valid
+                ? true
+                : passwordconfirmed.touched && passwordconfirmed.invalid
+                ? false
+                : undefined
+            "
+          />
 
-        <c-form-feedback
-          *ngIf="passwordconfirmed.invalid"
-          [valid]="!passwordconfirmed.invalid"
-        >
-          <ng-container *ngIf="passwordconfirmed.errors as errors">
-            <p *ngIf="errors['required']">El campo no puede estar en blanco</p>
-            <p *ngIf="errors['matchpass']">las claves no coinciden</p>
-          </ng-container>
-        </c-form-feedback>
-      </c-input-group>
+          <c-form-feedback
+            *ngIf="passwordconfirmed.invalid"
+            [valid]="!passwordconfirmed.invalid"
+          >
+            <ng-container *ngIf="passwordconfirmed.errors as errors">
+              <p *ngIf="errors['required']">
+                El campo no puede estar en blanco
+              </p>
+              <p *ngIf="errors['matchpass']">las claves no coinciden</p>
+            </ng-container>
+          </c-form-feedback>
+        </c-input-group>
 
-      <c-input-group class="mb-3">
-        <span cInputGroupText>
-          <svg cIcon name="cilEnvelopeClosed"></svg>
-        </span>
+        <c-input-group class="mb-3">
+          <span cInputGroupText>
+            <svg cIcon name="cilEnvelopeClosed"></svg>
+          </span>
 
-        <input
-          formControlName="email"
-          cFormControl
-          placeholder="ejemplo@ejemplo.com"
-          readonly
-        />
-      </c-input-group>
+          <input
+            formControlName="email"
+            cFormControl
+            placeholder="ejemplo@ejemplo.com"
+            readonly
+          />
+        </c-input-group>
 
-      <c-input-group class="mb-3">
-        <span cInputGroupText>
-          <svg cIcon name="cilLocationPin"></svg>
-        </span>
+        <c-input-group class="mb-3">
+          <span cInputGroupText>
+            <svg cIcon name="cilLocationPin"></svg>
+          </span>
 
-        <input
-          formControlName="dni"
-          cFormControl
-          placeholder="Log usuario"
-          readonly
-        />
-      </c-input-group>
-    </form>
-  </c-modal-body>
-  <c-modal-footer>
-    <button [cModalToggle]="userProfileModal.id" cButton color="secondary">
-      Cerrar
-    </button>
-    <button cButton 
-    [disabled]="!userProfileForm.valid"
-    (click)="updateProfileUser()" 
-    color="primary">
-      <svg cIcon class="me-2" name="cilSave"></svg>
-      Guardar
-    </button>
-  </c-modal-footer>
-</c-modal>
+          <input
+            formControlName="dni"
+            cFormControl
+            placeholder="Log usuario"
+            readonly
+          />
+        </c-input-group>
+      </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="userProfileModal.id" cButton color="secondary">
+        Cerrar
+      </button>
+      <button
+        cButton
+        [disabled]="!userProfileForm.valid"
+        (click)="updateProfileUser()"
+        color="primary"
+      >
+        <svg cIcon class="me-2" name="cilSave"></svg>
+        Guardar
+      </button>
+    </c-modal-footer>
+  </c-modal>
+
